@@ -1,49 +1,72 @@
 import { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import FormInput from '../../components/forms/FormInput';
+import Layout from '../../components/layout/Layout';
 
-function Login() {
-  const [showPassword, setShowPassword] = useState(false);
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      setError('Please enter both email and password');
+      return;
+    }
+
+    // Simulate login logic
+    if (email === 'admin@shikkha360.com' && password === '123456') {
+      // You can set auth context or token here
+      navigate('/dashboard');
+    } else {
+      setError('Invalid credentials');
+    }
+  };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-100 to-green-300">
-      <form className="bg-white shadow-lg rounded-lg p-8 w-full max-w-sm">
-        <h1 className="text-2xl font-semibold text-green-600 mb-6 text-center">Login</h1>
-
-        <input
-          type="text"
-          id="username"
-          placeholder="Username"
-          className="w-full border border-gray-300 rounded-md px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-green-400"
-        />
-
-        <div className="relative">
-          <input
-            type={showPassword ? 'text' : 'password'}
-            id="password"
-            placeholder="Password"
-            className="w-full border border-gray-300 rounded-md px-4 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-green-400"
+    <Layout>
+      <div className="max-w-md mx-auto mt-12 bg-white p-6 rounded shadow">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">Login to Shikkha360</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <FormInput
+            label="Email"
+            name="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="admin@shikkha360.com"
+            required
+            error={!email && error ? error : ''}
           />
-          <span
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-2.5 cursor-pointer text-gray-500 hover:text-green-600"
+
+          <FormInput
+            label="Password"
+            name="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+            required
+            error={!password && error ? error : ''}
+          />
+
+          {error && email && password && (
+            <div className="text-sm text-red-500">{error}</div>
+          )}
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
           >
-            {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-          </span>
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition duration-200"
-        >
-          Login
-        </button>
-
-        <p className="text-sm text-red-400 mt-4 text-center cursor-pointer hover:underline">
-          Forgot password?
-        </p>
-      </form>
-    </div>
+            Login
+          </button>
+        </form>
+      </div>
+    </Layout>
   );
-}
+};
 
 export default Login;
