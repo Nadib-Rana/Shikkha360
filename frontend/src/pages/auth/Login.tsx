@@ -1,72 +1,74 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import FormInput from '../../components/forms/FormInput';
-import Layout from '../../components/layout/Layout';
+import React from 'react';
+import type { ReactNode } from 'react';
+import { Link, Outlet } from 'react-router-dom';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
+interface LayoutProps {
+  children?: ReactNode; // Made optional since Outlet will handle child routes
+}
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email || !password) {
-      setError('Please enter both email and password');
-      return;
-    }
-
-    // Simulate login logic
-    if (email === 'admin@shikkha360.com' && password === '123456') {
-      // You can set auth context or token here
-      navigate('/dashboard');
-    } else {
-      setError('Invalid credentials');
-    }
-  };
-
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <Layout>
-      <div className="max-w-md mx-auto mt-12 bg-white p-6 rounded shadow">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">Login to Shikkha360</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <FormInput
-            label="Email"
-            name="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="admin@shikkha360.com"
-            required
-            error={!email && error ? error : ''}
-          />
-
-          <FormInput
-            label="Password"
-            name="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            required
-            error={!password && error ? error : ''}
-          />
-
-          {error && email && password && (
-            <div className="text-sm text-red-500">{error}</div>
-          )}
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+    <div className="min-h-screen flex bg-gray-50">
+      {/* Sidebar */}
+      <aside className="w-64 bg-white border-r shadow-sm hidden md:flex flex-col">
+        <div className="px-6 py-4 text-xl font-bold text-blue-600 border-b">
+          Shikkha360
+        </div>
+        <nav className="flex-1 px-4 py-6 space-y-2 text-sm">
+          <Link
+            to="/dashboard"
+            className="block px-3 py-2 rounded hover:bg-blue-50 transition-colors"
           >
-            Login
-          </button>
-        </form>
+            Dashboard
+          </Link>
+          <Link
+            to="/students"
+            className="block px-3 py-2 rounded hover:bg-blue-50 transition-colors"
+          >
+            Students
+          </Link>
+          <Link
+            to="/teachers"
+            className="block px-3 py-2 rounded hover:bg-blue-50 transition-colors"
+          >
+            Teachers
+          </Link>
+          <Link
+            to="/settings"
+            className="block px-3 py-2 rounded hover:bg-blue-50 transition-colors"
+          >
+            Settings
+          </Link>
+        </nav>
+      </aside>
+
+      {/* Main Area */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <header className="sticky top-0 z-10 bg-white shadow px-6 py-4 flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-gray-800">Welcome, Nadib</h1>
+          <div className="text-sm text-gray-500">
+            {new Date().toLocaleDateString('en-US', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            })}
+          </div>
+        </header>
+
+        {/* Content */}
+        <main className="flex-1 px-6 py-4">
+          {children || <Outlet />}
+        </main>
+
+        {/* Footer */}
+        <footer className="bg-white border-t px-6 py-3 text-sm text-gray-500 text-center">
+          © {new Date().getFullYear()} Shikkha360. All rights reserved.
+        </footer>
       </div>
-    </Layout>
+    </div>
   );
 };
 
-export default Login;
+export default Layout;
