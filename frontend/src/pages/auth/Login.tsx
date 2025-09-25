@@ -1,74 +1,103 @@
-import React from 'react';
-import type { ReactNode } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-interface LayoutProps {
-  children?: ReactNode; // Made optional since Outlet will handle child routes
-}
+export default function Login() {
+  const demo = {
+    email: "nadib@gamil.com",
+    password: "123456",
+  };
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email) {
+      setError("Email required");
+      setSuccess("");
+      return;
+    }
+    if (!password) {
+      setError("Password required");
+      setSuccess("");
+      return;
+    }
+
+    if (email === demo.email && password === demo.password) {
+      localStorage.setItem("token", "demo-jwt-token");
+      setError("");
+      setSuccess("Login successful ✅ Redirecting...");
+      setTimeout(() => {
+        navigate("/student");
+      }, 1500); 
+    } else {
+      setError("Invalid email or password ❌");
+      setSuccess("");
+    }
+  };
+
   return (
-    <div className="min-h-screen flex bg-gray-50">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r shadow-sm hidden md:flex flex-col">
-        <div className="px-6 py-4 text-xl font-bold text-blue-600 border-b">
-          Shikkha360
-        </div>
-        <nav className="flex-1 px-4 py-6 space-y-2 text-sm">
-          <Link
-            to="/dashboard"
-            className="block px-3 py-2 rounded hover:bg-blue-50 transition-colors"
-          >
-            Dashboard
-          </Link>
-          <Link
-            to="/students"
-            className="block px-3 py-2 rounded hover:bg-blue-50 transition-colors"
-          >
-            Students
-          </Link>
-          <Link
-            to="/teachers"
-            className="block px-3 py-2 rounded hover:bg-blue-50 transition-colors"
-          >
-            Teachers
-          </Link>
-          <Link
-            to="/settings"
-            className="block px-3 py-2 rounded hover:bg-blue-50 transition-colors"
-          >
-            Settings
-          </Link>
-        </nav>
-      </aside>
+    <div className="w-screen h-screen flex justify-center items-center bg-gray-50">
+      <div className="bg-amber-50 text-center shadow-lg py-6 px-8 rounded-md w-96">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Sign in</h2>
 
-      {/* Main Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="sticky top-0 z-10 bg-white shadow px-6 py-4 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-800">Welcome, Nadib</h1>
-          <div className="text-sm text-gray-500">
-            {new Date().toLocaleDateString('en-US', {
-              weekday: 'long',
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-            })}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-left text-gray-600 font-semibold"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="w-full border-2 py-2 px-3 rounded-md text-gray-700 focus:border-blue-500 focus:outline-none"
+            />
           </div>
-        </header>
 
-        {/* Content */}
-        <main className="flex-1 px-6 py-4">
-          {children || <Outlet />}
-        </main>
+          {/* Password */}
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-left text-gray-600 font-semibold"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              className="w-full border-2 py-2 px-3 rounded-md text-gray-700 focus:border-blue-500 focus:outline-none"
+            />
+          </div>
 
-        {/* Footer */}
-        <footer className="bg-white border-t px-6 py-3 text-sm text-gray-500 text-center">
-          © {new Date().getFullYear()} Shikkha360. All rights reserved.
-        </footer>
+          {/* Error & Success */}
+          {error && <p className="text-red-500 text-sm font-semibold">{error}</p>}
+          {success && <p className="text-green-600 text-sm font-semibold">{success}</p>}
+
+          {/* Submit */}
+          <button
+            type="submit"
+            className="bg-blue-600 w-full mt-2 py-2 rounded-md font-bold text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+          >
+            Sign in
+          </button>
+        </form>
       </div>
     </div>
   );
-};
-
-export default Layout;
+}

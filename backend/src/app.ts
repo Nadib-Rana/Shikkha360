@@ -8,11 +8,13 @@ import examRoutes from './routes/exam.routes';
 import feeRoutes from './routes/fee.routes';
 import messageRoutes from './routes/message.routes';
 import subjectRoutes from './routes/subject.routes'
+import auth from "./routes/auth"
 
 const app = express();
 app.use(cors());
 app.use(express.json())
 
+app.use('/auth',auth)
 app.use('/users', userRoutes);
 app.use('/students', studentRoutes);
 app.use('/teachers', teacherRoutes);

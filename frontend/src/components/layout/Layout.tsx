@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Navbar from './Navbar';
+import Sidebar from './Sidebar';
 
 interface LayoutProps {
   children?: ReactNode; // Optional since Outlet handles child routes
@@ -15,7 +15,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           Shikkha360
         </div>
         <nav className="flex-1 px-4 py-6">
-          <Navbar />
+          <Sidebar />
         </nav>
       </aside>
 

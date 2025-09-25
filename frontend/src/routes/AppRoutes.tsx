@@ -1,35 +1,45 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Login from "../pages/auth/Login";
-import AdminDashboard from "../pages/dashboard/AdminDashboard";
-import TeacherDashboard from "../pages/dashboard/TeacherDashboard";
-import StudentDashboard from "../pages/dashboard/StudentDashboard";
-import NotFound from "../pages/NotFound";
-import ProtectedRoute from "../components/layout/ProtectedRoute";
-import UserProfile from "../pages/profile/UserProfile";
-import EditProfile from "../pages/profile/EditProfile";
-import Dashboard from "../pages/Dashboard";
+import React from 'react';
+import { BrowserRouter, Routes, Route, Router } from 'react-router-dom';
+import Login from './pages/Auth/Login';
+import AddStudent from './pages/Students/AddStudent'; // 
+import EditSubject from './pages/Subjects/EditSubject';
+import AddSubject from './pages/Subjects/AddSubject';
+import StudentList from './pages/Students/StudentList';
+import Dashboard from './pages/Dashboard/Dashboard';
+import Student from './pages/Students/Student';
+import AdminProfile from './profile/admin/AdminProfile';
+import TeacherList from './pages/Teachers/TeacherList';
+import TeacherProfile from './pages/Teachers/TeacherProfile';
+import Teacher from './pages/Teachers/Teacher';
+// Placeholder components
 
-const AppRoutes: React.FC = () => {
+
+
+const Settings = () => <div>Settings Page</div>;
+
+const App: React.FC = () => {
   return (
-    <Routes>
-      {/* <Route path="/" element={<Navigate to="/login" />} /> */}
-      <Route path="/login" element={<Login />} />
-      <Route element={<ProtectedRoute role="admin" />}>
-        <Route path="/admin" element={<AdminDashboard />} />
-      </Route>
-      <Route path="/profile" element={<UserProfile />} />
-      <Route path="/profile/edit" element={<EditProfile />} />
-      <Route element={<ProtectedRoute role="teacher" />}>
-        <Route path="/teacher" element={<TeacherDashboard />} />
-      </Route>
-      <Route element={<ProtectedRoute role="student" />}>
-        <Route path="/student" element={<StudentDashboard />} />
-      </Route>
-      <Route path="*" element={<NotFound />} />
-      <Route path="/dashboard" element={<Dashboard />} />    
-    </Routes>
+    <BrowserRouter>
+      <Routes>
+        {/* Routes with Layout */}
+          <Route path='/' element={<Dashboard />} />
+          <Route path="/teachers" element={<Teacher />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/add-student" element={<AddStudent />} /> {/* ✅ Added route */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/edit" element={<EditSubject />} />
+          <Route path="/addsubject" element={<AddSubject />} />
+          <Route path="/students" element={<Student />} />
+          <Route path="/studentlist" element={<StudentList />} />
+          <Route path="/teacherlist" element={<TeacherList />} />
+          <Route path="/teacherprofile" element={<TeacherProfile />} />
+          <Route path="/admin" element={<AdminProfile />} />
+          
+        {/* Login route without Layout */}
+        
+      </Routes>
+    </BrowserRouter>
   );
 };
 
-export default AppRoutes;
+export default App;
