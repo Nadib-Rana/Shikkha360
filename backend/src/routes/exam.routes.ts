@@ -1,12 +1,9 @@
-import express from 'express';
-import {
-  createResult,
-  updateResult
-} from '../controllers/result.controller';
+import express  from "express";
+import { createExam,updateExam } from "../controllers/exam.controller";
 
 const router = express.Router();
 
-router.post('/', createResult);
-router.patch('/:id', updateResult);
+router.post("/",createExam);
+router.patch("/exams/:id",updateExam);
 
 export default router;
