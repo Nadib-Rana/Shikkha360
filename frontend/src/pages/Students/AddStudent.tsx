@@ -15,22 +15,41 @@ const classOptions = [
 const AddStudent = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
   const [dob, setDob] = useState<Date | null>(null);
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name || !email || !selectedClass || !dob) {
-      setError('All fields are required');
+    if (!name || !email || !password || !selectedClass || !dob) {
+      setError('All required fields must be filled');
       return;
     }
 
-    // Mock submission
-    console.log('Student added:', { name, email, selectedClass, dob });
-    setError('');
-    alert('Student added successfully!');
+    const studentData = {
+      name,
+      email,
+      password,
+      role: 'student',
+      contactInfo: {
+        phone,
+        address
+      },
+      status: 'active'
+    };
+
+    try {
+      // Replace with actual API call
+      console.log('Submitting student:', studentData);
+      setError('');
+      alert('Student added successfully!');
+    } catch (err) {
+      setError('Failed to add student');
+    }
   };
 
   return (
@@ -59,6 +78,17 @@ const AddStudent = () => {
             error={!email && error ? error : ''}
           />
 
+          <FormInput
+            label="Password"
+            name="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Set a password"
+            required
+            error={!password && error ? error : ''}
+          />
+
           <FormSelect
             label="Class"
             name="class"
@@ -75,6 +105,22 @@ const AddStudent = () => {
             onChange={setDob}
             required
             placeholder="dd/mm/yyyy"
+          />
+
+          <FormInput
+            label="Phone"
+            name="phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Enter contact number"
+          />
+
+          <FormInput
+            label="Address"
+            name="address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Enter address"
           />
 
           {error && <div className="text-sm text-red-500">{error}</div>}

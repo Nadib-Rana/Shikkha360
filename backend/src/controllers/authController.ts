@@ -25,8 +25,9 @@ export const registerUser = async (req: Request, res: Response) => {
     // Create user
     const newUser = new User({ name, email, password: hashedPassword, role });
     await newUser.save();
+    console.log(newUser);
 
-    res.status(201).json({ message: "Registration successful" });
+    res.status(201).json({ message: "Registration successful"});
   } catch (err) {
     res.status(500).json({ error: (err as Error).message });
   }
@@ -52,8 +53,9 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: "1h" });
-
+    
     res.json({ token, user: { name: user.name, email: user.email, role: user.role } });
+    console.log(user);
   } catch (err) {
     res.status(500).json({ error: (err as Error).message });
   }

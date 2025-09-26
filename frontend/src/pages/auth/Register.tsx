@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Layout from '../../components/layout/Layout';
 
 const Register: React.FC = () => {
@@ -8,9 +9,10 @@ const Register: React.FC = () => {
   const [role, setRole] = useState('teacher');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!name || !email || !password || !role) {
@@ -18,10 +20,29 @@ const Register: React.FC = () => {
       return;
     }
 
-    // Simulate registration logic
-    console.log('Registering:', { name, email, role, password });
-    alert('Registration successful!');
-    navigate('/login');
+    const isValidEmail = /\S+@\S+\.\S+/.test(email);
+    if (!isValidEmail) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/auth/register', {
+        name,
+        email,
+        role,
+        password,
+      });
+
+      console.log('Registration Response:', response);
+      setSuccess('Registration successful! Redirecting to login...');
+      setError('');
+      setTimeout(() => navigate('/login'), 1500);
+    } catch (err: any) {
+      console.error('Registration error:', err);
+      setError(err.response?.data?.message || 'Registration failed');
+      setSuccess('');
+    }
   };
 
   return (
@@ -50,7 +71,8 @@ const Register: React.FC = () => {
           >
             <option value="admin">Admin</option>
             <option value="teacher">Teacher</option>
-            <option value="staff">Staff</option>
+            <option value="student">Student</option>
+            <option value="parent">Parent</option>
           </select>
           <input
             type="password"
@@ -60,6 +82,7 @@ const Register: React.FC = () => {
             className="w-full border px-3 py-2 rounded"
           />
           {error && <div className="text-sm text-red-500">{error}</div>}
+          {success && <div className="text-sm text-green-600">{success}</div>}
           <button
             type="submit"
             className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"

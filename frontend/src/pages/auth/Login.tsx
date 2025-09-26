@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // ✅ Required for API call
 
 export default function Login() {
-  const demo = {
-    email: "nadib@gamil.com",
-    password: "123456",
-  };
-
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -14,29 +10,31 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email) {
-      setError("Email required");
-      setSuccess("");
-      return;
-    }
-    if (!password) {
-      setError("Password required");
+    if (!email || !password) {
+      setError("All fields are required");
       setSuccess("");
       return;
     }
 
-    if (email === demo.email && password === demo.password) {
-      localStorage.setItem("token", "demo-jwt-token");
+    try {
+      const response = await axios.post("http://localhost:5000/auth/login", {
+        email,
+        password,
+      });
+
+      console.log("Login response:", response.data);
+      setSuccess("Login successful!");
       setError("");
-      setSuccess("Login successful ✅ Redirecting...");
-      setTimeout(() => {
-        navigate("/student");
-      }, 1500); 
-    } else {
-      setError("Invalid email or password ❌");
+
+      // Optional: store token and redirect
+      // localStorage.setItem("authToken", response.data.token);
+      setTimeout(() => navigate("/"), 1500);
+    } catch (err: any) {
+      console.error("Login failed:", err);
+      setError(err.response?.data?.message || "Login failed");
       setSuccess("");
     }
   };
