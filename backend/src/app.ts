@@ -9,6 +9,7 @@ import feeRoutes from './routes/fee.routes';
 import messageRoutes from './routes/message.routes';
 import subjectRoutes from './routes/subject.routes'
 import auth from "./routes/auth"
+import resultRoutes from "./routes/result.routes"
 
 const app = express();
 app.use(cors());
@@ -23,5 +24,7 @@ app.use('/exams', examRoutes);
 app.use('/fees', feeRoutes);
 app.use('/messages', messageRoutes);
 app.use('/subjects', subjectRoutes)
+app.use('/results', resultRoutes);
+
 
 export default app;

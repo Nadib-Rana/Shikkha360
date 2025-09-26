@@ -10,6 +10,7 @@ const StudentSchema = new Schema<IStudent>({
   admissionDate: Date,
   parentId: { type: Schema.Types.ObjectId, ref: 'User' },
   documents: [String],
+  
 }, { timestamps: true });
 
 export default mongoose.model<IStudent>('Student', StudentSchema);
