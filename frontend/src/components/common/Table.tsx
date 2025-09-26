@@ -3,6 +3,7 @@ import React from 'react';
 interface Column {
   header: string;
   accessor: string;
+  Cell?: (value: any, row: Record<string, any>) => React.ReactNode;
 }
 
 interface TableProps {
@@ -35,10 +36,10 @@ const Table: React.FC<TableProps> = ({ columns, data }) => {
             </tr>
           ) : (
             data.map((row, idx) => (
-              <tr key={idx}>
+              <tr key={idx} className="hover:bg-gray-50 transition">
                 {columns.map((col) => (
                   <td key={col.accessor} className="px-4 py-2 text-sm text-gray-800">
-                    {row[col.accessor]}
+                    {col.Cell ? col.Cell(row[col.accessor], row) : row[col.accessor]}
                   </td>
                 ))}
               </tr>

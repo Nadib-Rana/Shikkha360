@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // ✅ Required for API call
+import axios from "axios";
+
+// Define the expected response structure
+interface LoginResponse {
+  user: {
+    email: string;
+    role: "admin" | "teacher" | "student" | "parent";
+  };
+  token: string;
+}
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
@@ -20,18 +29,35 @@ export default function Login() {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/auth/login", {
-        email,
-        password,
-      });
+      const response = await axios.post<LoginResponse>(
+        "http://localhost:5000/auth/login",
+        { email, password }
+      );
 
-      console.log("Login response:", response.data);
+      const { user, token } = response.data;
       setSuccess("Login successful!");
       setError("");
 
-      // Optional: store token and redirect
-      // localStorage.setItem("authToken", response.data.token);
-      setTimeout(() => navigate("/"), 1500);
+      // Store token if needed
+      localStorage.setItem("authToken", token);
+
+      // Role-based redirection
+      switch (user.role) {
+        case "admin":
+          navigate("/admin");
+          break;
+        case "teacher":
+          navigate("/teacher");
+          break;
+        case "student":
+          navigate("/student");
+          break;
+        case "parent":
+          navigate("/parent");
+          break;
+        default:
+          navigate("/");
+      }
     } catch (err: any) {
       console.error("Login failed:", err);
       setError(err.response?.data?.message || "Login failed");
@@ -47,10 +73,7 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email */}
           <div>
-            <label
-              htmlFor="email"
-              className="block text-left text-gray-600 font-semibold"
-            >
+            <label htmlFor="email" className="block text-left text-gray-600 font-semibold">
               Email
             </label>
             <input
@@ -66,10 +89,7 @@ export default function Login() {
 
           {/* Password */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-left text-gray-600 font-semibold"
-            >
+            <label htmlFor="password" className="block text-left text-gray-600 font-semibold">
               Password
             </label>
             <input

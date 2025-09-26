@@ -26,6 +26,7 @@ export const getStudents = async (_req: Request, res: Response) => {
 
 // ✅ Get Student by ID
 export const getStudentById = async (req: Request, res: Response) => {
+  console.log("Hit for get studet")
   try {
     const { id } = req.params;
     const student = await Student.findById(id).populate('userId parentId classId');

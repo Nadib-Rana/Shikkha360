@@ -1,23 +1,23 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Router } from 'react-router-dom';
-import Login from './pages/Auth/Login';
-import AddStudent from './pages/Students/AddStudent'; // 
-import EditSubject from './pages/Subjects/EditSubject';
-import AddSubject from './pages/Subjects/AddSubject';
-import StudentList from './pages/Students/StudentList';
-import Dashboard from './pages/Dashboard/Dashboard';
-import Student from './pages/Students/Student';
-import AdminProfile from './profile/admin/AdminProfile';
-import TeacherList from './pages/Teachers/TeacherList';
-import TeacherProfile from './pages/Teachers/TeacherProfile';
-import Teacher from './pages/Teachers/Teacher';
+import Login from '../pages/Auth/Login';
+import AddStudent from '../pages/Students/AddStudent'; // 
+import EditSubject from '../pages/Subjects/EditSubject';
+import AddSubject from '../pages/Subjects/AddSubject';
+import StudentList from '../pages/Students/StudentList';
+import Dashboard from '../pages/Dashboard/Dashboard';
+import Student from '../pages/Students/Student';
+import AdminProfile from '../profile/admin/AdminProfile';
+import TeacherList from '../pages/Teachers/TeacherList';
+import TeacherProfile from '../pages/Teachers/TeacherProfile';
+import Teacher from '../pages/Teachers/Teacher';
+import Register from "../pages/Auth/Register";
+
 // Placeholder components
-
-
 
 const Settings = () => <div>Settings Page</div>;
 
-const App: React.FC = () => {
+const AppRoutes: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -34,6 +34,7 @@ const App: React.FC = () => {
           <Route path="/teacherlist" element={<TeacherList />} />
           <Route path="/teacherprofile" element={<TeacherProfile />} />
           <Route path="/admin" element={<AdminProfile />} />
+          <Route path="/admin/reg" element={<Register />} />
           
         {/* Login route without Layout */}
         
@@ -42,4 +43,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default AppRoutes;

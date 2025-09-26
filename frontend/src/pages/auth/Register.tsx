@@ -90,7 +90,6 @@ const Register: React.FC = () => {
             Register
           </button>
         </form>
-
         <div className="mt-4 text-sm text-center">
           Already have an account?{' '}
           <a href="/login" className="text-blue-600 hover:underline">

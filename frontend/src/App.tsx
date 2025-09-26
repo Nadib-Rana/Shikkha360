@@ -1,17 +1,19 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./pages/Auth/Login";
 import Student from "./pages/Students/Student";
-import Register from "./pages/Auth/Register";
-
+import AdminProfile from "./profile/admin/AdminProfile";
+import StudentList from "./pages/Students/StudentList";
+import StudentProfile from "./pages/Students/StudentProfile";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/student" element={<Student />} />
-        <Route path="/auth/reg" element={<Register />} />
 
+        <Route path="/total-student" element={<StudentList />} />
+        <Route path="/admin" element={<AdminProfile />} />
+        <Route path="/student" element={<Student />} />
+        <Route path="/student-profile/:id" element={<StudentProfile />} />
+          
       </Routes>
     </Router>
   );

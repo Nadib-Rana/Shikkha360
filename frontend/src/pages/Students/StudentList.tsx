@@ -1,68 +1,97 @@
-import React from 'react';
-import Layout from '../../components/layout/Layout';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import Table from '../../components/common/Table';
+import Searching from '../../components/common/Scarching';
+import BackButton from '../../components/common/BackButton';
 
 interface Student {
-  id: number;
-  name: string;
-  email: string;
-  class: string;
-  dob: string;
+  _id: string;
+  userId: string;
+  studentID: string;
+  classId: string;
+  section: string;
+  admissionDate: string;
+  parentId: string;
+  documents: string[];
 }
 
-const students: Student[] = [
-  {
-    id: 1,
-    name: 'Ayesha Rahman',
-    email: 'ayesha@student.com',
-    class: 'Class 3',
-    dob: '12/04/2015'
-  },
-  {
-    id: 2,
-    name: 'Rafiul Islam',
-    email: 'rafiul@student.com',
-    class: 'Class 5',
-    dob: '08/11/2013'
-  },
-  {
-    id: 3,
-    name: 'Mehedi Hasan',
-    email: 'mehedi@student.com',
-    class: 'Class 4',
-    dob: '23/06/2014'
-  }
-];
-
 const StudentList: React.FC = () => {
+  const [students, setStudents] = useState<Student[]>([]);
+  const [filtered, setFiltered] = useState<Student[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    axios
+      .get<Student[]>('http://localhost:5000/students')
+      .then((response) => {
+        setStudents(response.data);
+        setFiltered(response.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  const handleSearch = (query: string) => {
+    const lower = query.toLowerCase();
+    const result = students.filter(
+      (s) =>
+        s.studentID.toLowerCase().includes(lower) ||
+        s.section.toLowerCase().includes(lower)
+    );
+    setFiltered(result);
+  };
+
+  const columns = [
+    { header: 'Student ID', accessor: 'studentID' },
+    { header: 'Section', accessor: 'section' },
+    {
+      header: 'Admission Date',
+      accessor: 'admissionDate',
+      Cell: (value: string) => new Date(value).toLocaleDateString('en-GB'),
+    },
+    {
+      header: 'Documents',
+      accessor: 'documents',
+      Cell: (value: string[]) => value.join(', '),
+    },
+    {
+      header: 'Actions',
+      accessor: '_id',
+      Cell: (id: string) => (
+        <Link
+          to={`/student-profile/${id}`}
+          className="inline-flex items-center gap-1 px-3 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700 transition"
+        >
+          👁️ View
+        </Link>
+      ),
+    },
+  ];
+
   return (
-    <Layout>
-      <div className="bg-white p-6 rounded shadow mt-6">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">Student List</h2>
-        <table className="w-full table-auto border-collapse">
-          <thead>
-            <tr className="bg-gray-100 text-left text-sm text-gray-600">
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Email</th>
-              <th className="px-4 py-2">Class</th>
-              <th className="px-4 py-2">Date of Birth</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map((student) => (
-              <tr key={student.id} className="border-b text-sm text-gray-700 hover:bg-gray-50">
-                <td className="px-4 py-2">{student.name}</td>
-                <td className="px-4 py-2">{student.email}</td>
-                <td className="px-4 py-2">{student.class}</td>
-                <td className="px-4 py-2">{student.dob}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="mt-4 text-xs text-gray-400 italic text-center">
-          Make sure in one life.
-        </div>
+    <div className="bg-white p-6 rounded shadow mt-6">
+      <p><BackButton/></p>
+      <h2 className="text-xl font-semibold text-gray-700 mb-4">Student List</h2>
+
+      <Searching onSearch={handleSearch} placeholder="Search by ID or section" />
+
+      {loading ? (
+        <p className="text-sm text-gray-500">Loading students...</p>
+      ) : error ? (
+        <p className="text-sm text-red-500">Error: {error}</p>
+      ) : (
+        <Table columns={columns} data={filtered} />
+      )}
+
+      <div className="mt-4 text-xs text-gray-400 italic text-center">
+        Make sure in one life.Nadib Rana
       </div>
-    </Layout>
+    </div>
   );
 };
 
