@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, data } from 'react-router-dom';
 import axios from 'axios';
-import { FaArrowLeft } from 'react-icons/fa';
 import BackButton from '../../components/common/BackButton';
+import Student from './Student';
 
 interface Student {
   _id: string;
@@ -20,14 +20,13 @@ interface Student {
 
 const StudentProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/students/${id}`)
+      .get<{data: Student}>(`http://localhost:5000/students/${id}`)
       .then((response) => {
         setStudent(response.data.data || response.data);
         setLoading(false);

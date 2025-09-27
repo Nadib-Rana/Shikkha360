@@ -53,7 +53,7 @@ const AddStudent = () => {
   };
 
   return (
-    <Layout>
+    
       <div className="max-w-xl mx-auto bg-white p-6 rounded shadow mt-8">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">Add New Student</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -133,7 +133,6 @@ const AddStudent = () => {
           </button>
         </form>
       </div>
-    </Layout>
   );
 };
 
