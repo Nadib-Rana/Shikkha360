@@ -14,7 +14,7 @@ export const getAttendanceByUser = async (req: Request, res: Response) => {
 
 export const updateAttendance = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params; 
     const updateData = req.body;
 
     const updatedAttendance = await Attendance.findByIdAndUpdate(
