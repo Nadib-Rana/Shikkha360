@@ -13,6 +13,8 @@ function App() {
         <Route path="/admin" element={<AdminProfile />} />
         <Route path="/student" element={<Student />} />
         <Route path="/student-profile/:id" element={<StudentProfile />} />
+        <Route path="/student-profile/:id" element={< />} />
+
           
       </Routes>
     </Router>
