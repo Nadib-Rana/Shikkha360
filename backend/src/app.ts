@@ -11,6 +11,7 @@ import subjectRoutes from './routes/subject.routes'
 import auth from "./routes/auth"
 import resultRoutes from "./routes/result.routes"
 import classRoutes from './routes/class.routes';
+import assignmentRoutes from './routes/assignment.routes';
 
 
 const app = express();
@@ -28,6 +29,8 @@ app.use('/messages', messageRoutes);
 app.use('/subjects', subjectRoutes)
 app.use('/results', resultRoutes);
 app.use('/classes', classRoutes);
+app.use('/assignments', assignmentRoutes);
+
 
 
 
