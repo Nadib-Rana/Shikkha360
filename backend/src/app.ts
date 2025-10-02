@@ -16,6 +16,7 @@ import classRoutes from './routes/class.routes';
 import assignmentRoutes from './routes/assignment.routes';
 
 
+
 const app = express();
 app.use(cors());
 app.use(express.json())
@@ -31,7 +32,7 @@ app.use('/attendance', attendanceRoutes);
 app.use('/exams', examRoutes);
 app.use('/fees', feeRoutes);
 app.use('/messages', messageRoutes);
-app.use('/subjects', subjectRoutes)
+app.use('/subjects', subjectRoutes);
 app.use('/results', resultRoutes);
 app.use('/classes', classRoutes);
 app.use('/assignments', assignmentRoutes);

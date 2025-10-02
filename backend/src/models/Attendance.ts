@@ -11,7 +11,7 @@ const AttendanceSchema = new Schema<IAttendance>({
     required: true },
   date: { type: Date, required: true },
 
- section:{type:Schema.Types.ObjectId , ref:'section'},
+ section:{type: String , required:true},
 
   status: { type: String, enum: ['present', 'absent', 'late'], required: true },
  

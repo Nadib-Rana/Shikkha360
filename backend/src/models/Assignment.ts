@@ -9,9 +9,7 @@ const assignmentSchema = new Schema<AssignmentDocument>(
     subject: {type: Schema.Types.ObjectId,ref: 'Subject',required: true,},
 
     classId: { type: Schema.Types.ObjectId, ref: 'Class' },
-   
-    sectionId: { type: Schema.Types.ObjectId, ref: 'Section' },
-
+  
     studentIds: [{ type: Schema.Types.ObjectId, ref: 'Student' }],
     
     fileUrl: {type: String},

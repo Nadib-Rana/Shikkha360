@@ -6,8 +6,8 @@ const StudentSchema = new Schema<IStudent>({
   userId: { type: Schema.ObjectId, ref: 'User', required: true },
   studentID: { type: String, unique: true, required: true },
   classId: { type: Schema.Types.ObjectId, ref: 'Class', required: true },
-  section: {type:Schema.Types.ObjectId, ref: 'section'},
-  admissionDate: Date,
+  section:{type: String , required:true},
+  admissionDate:{Date},
   parentId: { type: Schema.Types.ObjectId, ref: 'User' },
   documents: [String],
   
