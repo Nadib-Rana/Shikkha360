@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+
 import userRoutes from './routes/user.routes';
 import studentRoutes from './routes/student.routes';
 import teacherRoutes from './routes/teacher.routes';
@@ -18,6 +20,9 @@ const app = express();
 app.use(cors());
 app.use(express.json())
 
+
+
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 app.use('/auth',auth)
 app.use('/users', userRoutes);
 app.use('/students', studentRoutes);
@@ -30,6 +35,7 @@ app.use('/subjects', subjectRoutes)
 app.use('/results', resultRoutes);
 app.use('/classes', classRoutes);
 app.use('/assignments', assignmentRoutes);
+
 
 
 

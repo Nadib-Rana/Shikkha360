@@ -5,7 +5,7 @@ export interface IStudent {
   userId: Types.ObjectId;
   studentID: string;
   classId: Types.ObjectId;
-  section: string;
+  section: Types.ObjectId;
   admissionDate: Date;
   parentId: Types.ObjectId;
   documents?: string[];

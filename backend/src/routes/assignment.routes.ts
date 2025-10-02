@@ -7,7 +7,13 @@ import {
   deleteAssignment,
 } from '../controllers/assignment.controller';
 
+import upload from '../config/multer'; // ✅ তোমার multer config import
+
 const router = express.Router();
+
+// file সহ assignment তৈরি
+router.post('/', upload.single('file'), createAssignment);
+
 
 // GET all assignments
 router.get('/', getAssignments);

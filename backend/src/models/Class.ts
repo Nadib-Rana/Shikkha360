@@ -7,7 +7,7 @@ const ClassSchema = new Schema<IClass>({
      type: String, 
      required: true 
     },
-  section: String,
+  section: Schema.Types.ObjectId,
   classTeacherId: { 
     type: Schema.Types.ObjectId, 
     ref: 'Teacher' 

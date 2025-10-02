@@ -16,4 +16,4 @@ const subjectSchema = new Schema<ISubject>({
     }
   ]
 });
-export default mongoose.model<ISubject>('subject',subjectSchema);
+export default mongoose.model<ISubject>('Subject',subjectSchema);

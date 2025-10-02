@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-interface Class { _id: string; gradeLevel: string; section: string; subjectIds: string[] }
+interface Class { _id: string; name: string }
 interface Section { _id: string; name: string; classId: string }
-interface Student { _id: string; name: string; section: string; classId: string }
+interface Student { _id: string; name: string; sectionId: string }
 interface Subject { _id: string; name: string }
 
 const TeacherAssignments: React.FC = () => {
   const [classes, setClasses] = useState<Class[]>([]);
+  const [sections, setSections] = useState<Section[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [assignments, setAssignments] = useState<any[]>([]);
@@ -15,7 +16,7 @@ const TeacherAssignments: React.FC = () => {
   const [form, setForm] = useState({
     subject: '',
     classId: '',
-    section: '',
+    sectionId: '',
     studentIds: [] as string[],
     dueDate: '',
     status: 'Pending',
@@ -24,6 +25,7 @@ const TeacherAssignments: React.FC = () => {
 
   useEffect(() => {
     axios.get('http://localhost:5000/classes').then(res => setClasses(res.data));
+    axios.get('http://localhost:5000/sections').then(res => setSections(res.data));
     axios.get('http://localhost:5000/students').then(res => setStudents(res.data));
     axios.get('http://localhost:5000/subjects').then(res => setSubjects(res.data));
     axios.get('http://localhost:5000/assignments').then(res => setAssignments(res.data));
@@ -34,21 +36,20 @@ const TeacherAssignments: React.FC = () => {
     const formData = new FormData();
     formData.append('subject', form.subject);
     formData.append('classId', form.classId);
-    formData.append('section', form.section);
+    formData.append('sectionId', form.sectionId);
     formData.append('studentIds', JSON.stringify(form.studentIds));
     formData.append('dueDate', form.dueDate);
     formData.append('status', form.status);
     if (form.file) formData.append('file', form.file);
 
     await axios.post('http://localhost:5000/assignments', formData);
-    setForm({ subject: '', classId: '', section: '', studentIds: [], dueDate: '', status: 'Pending', file: null });
+    setForm({ subject: '', classId: '', sectionId: '', studentIds: [], dueDate: '', status: 'Pending', file: null });
     const updated = await axios.get('http://localhost:5000/assignments');
     setAssignments(updated.data);
   };
 
-  const filteredStudents = students.filter(s =>
-    s.classId === form.classId && s.section === form.section
-  );
+  const filteredSections = sections.filter(s => s.classId === form.classId);
+  const filteredStudents = students.filter(s => s.sectionId === form.sectionId);
 
   return (
     <div className="p-6">
@@ -61,19 +62,17 @@ const TeacherAssignments: React.FC = () => {
           {subjects.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
         </select>
 
-        <select value={form.classId} onChange={e => setForm({ ...form, classId: e.target.value })}
+        <select value={form.classId} onChange={e => setForm({ ...form, classId: e.target.value, sectionId: '', studentIds: [] })}
           className="w-full p-2 border rounded">
           <option value="">Select Class</option>
-          {classes.map(c => (
-            <option key={c._id} value={c._id}>
-              {c.gradeLevel} - Section {c.section}
-            </option>
-          ))}
+          {classes.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
         </select>
 
-        <input type="text" placeholder="Section" value={form.section}
-          onChange={e => setForm({ ...form, section: e.target.value })}
-          className="w-full p-2 border rounded" />
+        <select value={form.sectionId} onChange={e => setForm({ ...form, sectionId: e.target.value, studentIds: [] })}
+          className="w-full p-2 border rounded">
+          <option value="">Select Section</option>
+          {filteredSections.map(s => <option key={s._id} value={s._id}>{s.name}</option>)}
+        </select>
 
         <div className="border rounded p-2">
           <label className="block mb-1 font-medium">Select Students</label>

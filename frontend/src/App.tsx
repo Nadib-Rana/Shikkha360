@@ -3,7 +3,9 @@ import Student from "./pages/Students/Student";
 import AdminProfile from "./profile/admin/AdminProfile";
 import StudentList from "./pages/Students/StudentList";
 import StudentProfile from "./pages/Students/StudentProfile";
-import { Assignments } from "./pages/Students/Assignments";
+import  Assignments  from "./pages/Students/Assignments";
+import TeacherAssignments from "./pages/Teachers/Assignments";
+
 
 function App() {
   return (
@@ -15,7 +17,7 @@ function App() {
         <Route path="/student" element={<Student />} />
         <Route path="/student-profile/:id" element={<StudentProfile />} /> */}
         <Route path="/" element={<Assignments />} />
-
+        <Route path="/assignments" element={<TeacherAssignments />} />
       </Routes>
     </Router>
   );
