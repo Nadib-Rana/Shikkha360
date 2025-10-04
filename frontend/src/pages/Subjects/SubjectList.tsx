@@ -16,7 +16,7 @@ const subjects: Subject[] = [
 
 const SubjectList: React.FC = () => {
   return (
-    <Layout>
+   
       <div className="bg-white p-6 rounded shadow mt-6">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">Subject List</h2>
         <table className="w-full table-auto border-collapse">
@@ -41,7 +41,6 @@ const SubjectList: React.FC = () => {
           Make sure in one life.
         </div>
       </div>
-    </Layout>
   );
 };
 

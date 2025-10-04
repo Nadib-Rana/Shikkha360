@@ -37,7 +37,7 @@ const studentActions = [
 
 function Student() {
   return (
-    <Layout links={studentLinks}>
+    <div >
       <h2 className="text-xl font-semibold text-gray-700 mb-6">Student Actions</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {studentActions.map((action) => (
@@ -50,7 +50,7 @@ function Student() {
           />
         ))}
       </div>
-    </Layout>
+    </div>
   );
 }
 

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { FaUserGraduate, FaChartLine, FaClipboard, FaComments, FaMoneyBill, FaUserCog, FaHome } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import Layout from '../components/layout/Layout';
 
 const menuItems = [
   { path: '/parent/dashboard', label: "Dashboard", icon: <FaHome /> },
@@ -16,22 +16,8 @@ const menuItems = [
 
 const ParentDashboard: React.FC = () => {
   return (
+    <Layout links={menuItems} >
     <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <aside className="w-64 bg-green-900 text-white flex flex-col">
-        <h2 className="text-xl font-bold p-4 border-b border-green-700">Parent Panel</h2>
-        <nav className="flex flex-col gap-1 p-2">
-          {menuItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className="flex items-center gap-2 p-2 rounded transition hover:bg-green-700"
-            >
-              {item.icon} {item.label}
-            </Link>
-          ))}
-        </nav>
-      </aside>
       {/* Main Content */}
       <main className="flex-1 p-8 bg-gray-50">
         <h1 className="text-2xl font-bold mb-4">Parent Dashboard</h1>
@@ -57,6 +43,7 @@ const ParentDashboard: React.FC = () => {
         </div>
       </main>
     </div>
+    </Layout>
   );
 };
 
