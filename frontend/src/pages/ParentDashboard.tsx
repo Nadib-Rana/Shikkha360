@@ -1,0 +1,63 @@
+
+import React from 'react';
+import { FaUserGraduate, FaChartLine, FaClipboard, FaComments, FaMoneyBill, FaUserCog, FaHome } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+
+const menuItems = [
+  { path: '/parent/dashboard', label: "Dashboard", icon: <FaHome /> },
+  { path: '/parent/children', label: "My Children", icon: <FaUserGraduate /> },
+  { path: '/parent/progress', label: "Progress & Grades", icon: <FaChartLine /> },
+  { path: '/parent/attendance', label: "Attendance", icon: <FaClipboard /> },
+  { path: '/parent/assignments', label: "Assignments", icon: <FaClipboard /> },
+  { path: '/parent/messages', label: "Messages", icon: <FaComments /> },
+  { path: '/parent/fees', label: "Fees & Payments", icon: <FaMoneyBill /> },
+  { path: '/parent/profile', label: "Profile/Settings", icon: <FaUserCog /> },
+];
+
+const ParentDashboard: React.FC = () => {
+  return (
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <aside className="w-64 bg-green-900 text-white flex flex-col">
+        <h2 className="text-xl font-bold p-4 border-b border-green-700">Parent Panel</h2>
+        <nav className="flex flex-col gap-1 p-2">
+          {menuItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className="flex items-center gap-2 p-2 rounded transition hover:bg-green-700"
+            >
+              {item.icon} {item.label}
+            </Link>
+          ))}
+        </nav>
+      </aside>
+      {/* Main Content */}
+      <main className="flex-1 p-8 bg-gray-50">
+        <h1 className="text-2xl font-bold mb-4">Parent Dashboard</h1>
+        <p className="mb-6">Welcome, Parent! Here you can view your child's progress, attendance, assignments, communicate with teachers, and manage payments.</p>
+        {/* Add main dashboard widgets or summary here */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white rounded shadow p-4">
+            <h2 className="font-semibold mb-2">Children Overview</h2>
+            <p>See your children's profiles and academic status.</p>
+          </div>
+          <div className="bg-white rounded shadow p-4">
+            <h2 className="font-semibold mb-2">Recent Messages</h2>
+            <p>Check latest communications from teachers and school.</p>
+          </div>
+          <div className="bg-white rounded shadow p-4">
+            <h2 className="font-semibold mb-2">Upcoming Assignments</h2>
+            <p>Track assignments and deadlines for your children.</p>
+          </div>
+          <div className="bg-white rounded shadow p-4">
+            <h2 className="font-semibold mb-2">Fee Status</h2>
+            <p>View and manage school fees and payments.</p>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default ParentDashboard;

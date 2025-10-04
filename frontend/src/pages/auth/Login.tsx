@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from '../../context/AuthContext';
 
 // Define the expected response structure
 interface LoginResponse {
@@ -18,6 +19,7 @@ export default function Login() {
   const [success, setSuccess] = useState<string>("");
 
   const navigate = useNavigate();
+  const { setIsAuthenticated } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,20 +42,21 @@ export default function Login() {
 
       // Store token if needed
       localStorage.setItem("authToken", token);
+      setIsAuthenticated(true);
 
       // Role-based redirection
       switch (user.role) {
         case "admin":
-          navigate("/admin");
+          navigate("/admin/dashboard");
           break;
         case "teacher":
-          navigate("/teacher");
+          navigate("/teacher/dashboard");
           break;
         case "student":
-          navigate("/student");
+          navigate("/student/dashboard");
           break;
         case "parent":
-          navigate("/parent");
+          navigate("/parent/dashboard");
           break;
         default:
           navigate("/");
@@ -75,7 +78,7 @@ export default function Login() {
           <div>
             <label htmlFor="email" className="block text-left text-gray-600 font-semibold">
               Email
-            </label>
+            </label>  
             <input
               type="email"
               id="email"

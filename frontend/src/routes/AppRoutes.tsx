@@ -4,8 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from '../pages/Auth/Login';
 import Register from '../pages/Auth/Register';
 
-import Dashboard from '../pages/Dashboard/Dashboard';
-
+import RoleDashboard from '../pages/RoleDashboard';
 
 import AddStudent from '../pages/Students/AddStudent';
 import StudentList from '../pages/Students/StudentList';
@@ -26,6 +25,10 @@ import TeacherResults from '../pages/Teachers/TeacherResults ';
 
 import AdminProfile from '../profile/admin/AdminProfile';
 import Assignments from '../profile/student/Assignments';
+import AdminDashboard from '../pages/AdminDashboard';
+import ParentDashboard from '../pages/ParentDashboard';
+import StudentDashboard from '../pages/Students/Dashboard';
+import ProtectedRoute from '../components/layout/ProtectedRoute';
 
 const AppRoutes: React.FC = () => {
   return (
@@ -35,36 +38,48 @@ const AppRoutes: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Dashboard */}
-        <Route path="/" element={<Dashboard />} />
+        {/* Protected Routes */}
         
-
+        <Route path="/" element={
+          <ProtectedRoute>
+            <RoleDashboard />
+          </ProtectedRoute>
+        } />
         {/* Students */}
-        <Route path="/students" element={<Student />} />
-        <Route path="/students/add" element={<AddStudent />} />
-        <Route path="/students/list" element={<StudentList />} />
-        <Route path="/students/profile/:id" element={<StudentProfile />} />
-        <Route path="/students/assignments" element={<StudentAssignments />} />
-        <Route path="/students/result" element={<StudentResults />} />
-
-
+        <Route path="/students" element={<ProtectedRoute><Student /></ProtectedRoute>} />
+        <Route path="/students/add" element={<ProtectedRoute><AddStudent /></ProtectedRoute>} />
+        <Route path="/students/list" element={<ProtectedRoute><StudentList /></ProtectedRoute>} />
+        <Route path="/students/profile/:id" element={<ProtectedRoute><StudentProfile /></ProtectedRoute>} />
+        <Route path="/students/assignments" element={<ProtectedRoute><StudentAssignments /></ProtectedRoute>} />
+        <Route path="/students/result" element={<ProtectedRoute><StudentResults /></ProtectedRoute>} />
         {/* Subjects */}
-        <Route path="/subjects/add" element={<AddSubject />} />
-        <Route path="/subjects/edit/:id" element={<EditSubject />} />
-
+        <Route path="/subjects/add" element={<ProtectedRoute><AddSubject /></ProtectedRoute>} />
+        <Route path="/subjects/edit/:id" element={<ProtectedRoute><EditSubject /></ProtectedRoute>} />
         {/* Teachers */}
-        <Route path="/teachers" element={<Teacher />} />
-        <Route path="/teachers/list" element={<TeacherList />} />
-        <Route path="/teachers/profile/:id" element={<TeacherProfile />} />
-        <Route path="/teachers/assignments" element={<TeacherAssignments />} />
-        <Route path="/teachers/assign-subjects" element={<AssignSubjects />} />
-        <Route path="/teachers/result" element={<TeacherResults />} />
-
+        <Route path="/teachers" element={<ProtectedRoute><Teacher /></ProtectedRoute>} />
+        <Route path="/teachers/list" element={<ProtectedRoute><TeacherList /></ProtectedRoute>} />
+        <Route path="/teachers/profile/:id" element={<ProtectedRoute><TeacherProfile /></ProtectedRoute>} />
+        <Route path="/teachers/assignments" element={<ProtectedRoute><TeacherAssignments /></ProtectedRoute>} />
+        <Route path="/teachers/assign-subjects" element={<ProtectedRoute><AssignSubjects /></ProtectedRoute>} />
+        <Route path="/teachers/result" element={<ProtectedRoute><TeacherResults /></ProtectedRoute>} />
         {/* Admin */}
-        <Route path="/admin/profile" element={<AdminProfile />} />
-
+        <Route path="/admin/profile" element={<ProtectedRoute><AdminProfile /></ProtectedRoute>} />
         {/* Student Profile Assignments */}
-        <Route path="/profile/assignments" element={<Assignments />} />
+        <Route path="/profile/assignments" element={<ProtectedRoute><Assignments /></ProtectedRoute>} />
+        {/* Admin Dashboard and subpages */}
+        <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/admin/users" element={<ProtectedRoute><div>Manage Users Page</div></ProtectedRoute>} />
+        <Route path="/admin/teachers" element={<ProtectedRoute><div>Teachers Management Page</div></ProtectedRoute>} />
+        <Route path="/admin/students" element={<ProtectedRoute><div>Students Management Page</div></ProtectedRoute>} />
+        <Route path="/admin/subjects" element={<ProtectedRoute><div>Subjects Management Page</div></ProtectedRoute>} />
+        <Route path="/admin/assignments" element={<ProtectedRoute><div>Assignments Management Page</div></ProtectedRoute>} />
+        <Route path="/admin/reports" element={<ProtectedRoute><div>Reports Page</div></ProtectedRoute>} />
+        <Route path="/admin/fees" element={<ProtectedRoute><div>Fees & Payments Page</div></ProtectedRoute>} />
+        <Route path="/admin/settings" element={<ProtectedRoute><div>Settings Page</div></ProtectedRoute>} />
+        {/* Other dashboards */}
+        <Route path="/parent" element={<ProtectedRoute><ParentDashboard /></ProtectedRoute>} />
+        <Route path="/student" element={<ProtectedRoute><StudentDashboard /></ProtectedRoute>} />
+        <Route path="/teacher" element={<ProtectedRoute><TeacherProfile /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );

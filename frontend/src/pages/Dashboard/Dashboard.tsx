@@ -12,7 +12,7 @@ const stats = [
 
 const Dashboard: React.FC = () => {
   return (
-    <Layout>
+    <Layout >
       <StatsCards />
       <RecentActivity />
     </Layout>

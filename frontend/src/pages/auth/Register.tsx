@@ -46,7 +46,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <Layout>
+   
       <div className="max-w-md mx-auto bg-white p-6 rounded shadow mt-12">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">Register</h2>
         <form onSubmit={handleRegister} className="space-y-4">
@@ -97,7 +97,6 @@ const Register: React.FC = () => {
           </a>
         </div>
       </div>
-    </Layout>
   );
 };
 
