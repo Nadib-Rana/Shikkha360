@@ -13,7 +13,7 @@ type LayoutProps = {
 
 const Layout: React.FC<LayoutProps> = ({ children, links }) => {
   return (
-    <div className="flex min-h-screen">
+    <div className=" flex min-h-screen">
       <aside className="w-64 bg-white border-r p-4">
         <Sidebar links={links} />
       </aside>

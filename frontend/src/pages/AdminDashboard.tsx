@@ -4,6 +4,7 @@ import { FaUsers, FaUserTie, FaUserGraduate, FaBook, FaClipboard, FaChartBar, Fa
 import { Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Dashboard from './Dashboard/Dashboard';
+import Header from '../components/layout/Header';
 
 const menuItems = [
   { path: '/admin', label: "Dashboard", icon: <FaHome /> },
@@ -20,29 +21,20 @@ const menuItems = [
 const AdminDashboard: React.FC = () => {
   return (
 <div > 
-  <div className='flex justify-between border-b-1'>
-  <h2 className='text-3xl font-bold text-gray-700 text-center'>Admin Name</h2>
-  <div className='flex justify-between'>
-    <ul className='m-1 text-left'> 
-      <li className='text-xl font-bold text-gray-500'>UserName</li>
-      <li className='text-sm font-mono'>UserID:213002247</li>
-     </ul>
-     <img 
-     src="https://avatars.githubusercontent.com/u/169526577?v=4"
-     alt="ProfileImg"
-     className='max-w-[50px] max-h-[50px] border-2 border-gray-700 rounded-[50%] p-0.5 m-1'
-     />
-  </div>
-  </div>  
-  <Layout links={menuItems} >
+    <Header /> 
+<div className='py-[55px]'>
+  <Layout 
+  links={menuItems}
+   >
    <div className="flex min-h-screen">
       {/* Main Content */}
-      <main className="flex-1 p-8 bg-gray-50">
+      <main className="flex-1  bg-gray-50">
         <Dashboard />
       </main>
     </div>
     </Layout>
   </div>
+ </div>
   );
 };
 
