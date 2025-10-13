@@ -1,7 +1,7 @@
 import React from 'react';
 
 import RecentActivity from './RecentActivity';
-import StatsCards from './StatsCards';
+import StatsCards from './AdminDashboard';
 
 
 const Dashboard: React.FC = () => {

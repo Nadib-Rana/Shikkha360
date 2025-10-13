@@ -6,8 +6,12 @@ import Student from '../pages/Students/Student';
 import Layout from '../components/layout/Layout';
 import { FaBook, FaChartBar, FaClipboard, FaCog, FaHome, FaMoneyBill, FaUserGraduate, FaUsers, FaUserTie } from 'react-icons/fa';
 import Subject from '../pages/Subjects/Subject';
-import Teacher from '../pages/Teachers/Teacher';
+import Teacher from '../pages/Teachers/Teachers';
 import { FaPersonRifle } from 'react-icons/fa6';
+import ManageUser from '../pages/Dashboard/ManageUser';
+import TeachersList from '../pages/Teachers/TeacherList';
+import StudentList from '../pages/Students/StudentList';
+import SubjectList from '../pages/Subjects/SubjectList';
 
 
 const menuItems = [
@@ -24,18 +28,16 @@ const menuItems = [
 ];
 
 const AdminRoutes = [
-  <Route key="admin-dashboard" path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />,
+  <Route key="admin-dashboard" path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />,
   
   <Route key="admin-profile" path="/admin/profile"
    element={
    <ProtectedRoute>
       <AdminProfile />
-    </ProtectedRoute>} />,
+    </ProtectedRoute>} 
+    />,
  
-
   <Route key="admin-teachers" path="/admin/teachers" 
-  
-  
   element={
   <ProtectedRoute>
      <div>
@@ -43,7 +45,28 @@ const AdminRoutes = [
           <Teacher />
       </Layout>
      </div>
-    </ProtectedRoute>} />,
+  </ProtectedRoute>} />,
+  
+  <Route key="admin-teachers" path="/admin/teachers/teacher-list" 
+  element={
+  <ProtectedRoute>
+     <div>
+     <Layout links={menuItems}>
+          <TeachersList />
+      </Layout>
+     </div>
+  </ProtectedRoute>} />,
+
+  
+  <Route key="admin-students" path="/admin/students/student-list" 
+  element={
+  <ProtectedRoute>
+     <div>
+     <Layout links={menuItems}>
+          <StudentList />
+      </Layout>
+     </div>
+  </ProtectedRoute>} />,
   
 
   <Route key="admin-students" path="/admin/students" 
@@ -57,7 +80,9 @@ const AdminRoutes = [
   </ProtectedRoute>}/>,
 
 
-  <Route key="admin-subjects" path="/admin/subjects"
+  <Route 
+   key="admin-subjects"
+   path="/admin/subjects"
    element={
    <ProtectedRoute>
      <div>
@@ -65,10 +90,49 @@ const AdminRoutes = [
            <Subject />
         </Layout>
      </div>
-    </ProtectedRoute>} />,
+  </ProtectedRoute>} />,
 
 
-  <Route key="admin-assignments" path="/admin/assignments" element={<ProtectedRoute><div>Assignments Management Page</div></ProtectedRoute>} />,
+<Route 
+   key="admin-subjects-subject-list"
+   path="/admin/subjects/subject-list"
+   element={
+   <ProtectedRoute>
+     <div>
+        <Layout links={menuItems}>
+           <SubjectList />
+        </Layout>
+     </div>
+  </ProtectedRoute>} />,
+
+  <Route 
+  key="admin-assignments" 
+  path="/admin/assignments" 
+  element={
+  <ProtectedRoute>
+     <div>
+      manage Assinment
+     </div>
+  </ProtectedRoute>
+  } 
+  />,
+
+
+  <Route 
+  key="admin-users" 
+  path="/admin/users" 
+  element={
+  <ProtectedRoute>
+    <Layout links={menuItems}>
+      <ManageUser/>
+    </Layout>
+     
+  </ProtectedRoute>
+  } 
+  />
+  
+
+  ,
   <Route key="admin-reports" path="/admin/reports" element={<ProtectedRoute><div>Reports Page</div></ProtectedRoute>} />,
   <Route key="admin-fees" path="/admin/fees" element={<ProtectedRoute><div>Fees & Payments Page</div></ProtectedRoute>} />,
   <Route key="admin-settings" path="/admin/settings" element={<ProtectedRoute><div>Settings Page</div></ProtectedRoute>} />,

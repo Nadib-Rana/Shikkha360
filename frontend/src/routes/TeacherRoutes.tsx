@@ -1,6 +1,6 @@
 import { Route } from 'react-router-dom';
 import ProtectedRoute from '../components/layout/ProtectedRoute';
-import Teacher from '../pages/Teachers/Teacher';
+import Teacher from '../pages/Teachers/ManageTeachers';
 import TeacherList from '../pages/Teachers/TeacherList';
 import TeacherProfile from '../pages/Teachers/TeacherProfile';
 import TeacherAssignments from '../pages/Teachers/TeacherAssignments';

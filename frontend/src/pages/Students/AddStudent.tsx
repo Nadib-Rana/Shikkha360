@@ -1,139 +1,190 @@
-import { useState } from 'react';
-import Layout from '../../components/layout/Layout';
-import FormInput from '../../components/forms/FormInput';
-import FormSelect from '../../components/forms/FormSelect';
-import FormDatePicker from '../../components/forms/FormDatePicker';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const classOptions = [
-  { label: 'Class 1', value: '1' },
-  { label: 'Class 2', value: '2' },
-  { label: 'Class 3', value: '3' },
-  { label: 'Class 4', value: '4' },
-  { label: 'Class 5', value: '5' }
-];
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+}
 
-const AddStudent = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [selectedClass, setSelectedClass] = useState('');
-  const [dob, setDob] = useState<Date | null>(null);
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
+interface Class {
+  _id: string;
+  gradeLevel: string;
+  section: string;
+}
+
+interface Props {
+  onSuccess?: () => void;
+}
+
+const AddStudent: React.FC<Props> = ({ onSuccess }) => {
+  const [form, setForm] = useState({
+    userId: '',
+    studentID: '',
+    classId: '',
+    section: '',
+    admissionDate: '',
+    parentId: '',
+    documents: '',
+  });
+
+  const [users, setUsers] = useState<User[]>([]);
+  const [parents, setParents] = useState<User[]>([]);
+  const [classes, setClasses] = useState<Class[]>([]);
+  const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    axios.get<User[]>('http://localhost:5000/users')
+      .then(res => {
+        setUsers(res.data.filter(u => u.role === 'student'));
+        setParents(res.data.filter(u => u.role === 'parent'));
+      });
+
+    axios.get<Class[]>('http://localhost:5000/classes')
+      .then(res => setClasses(res.data));
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!name || !email || !password || !selectedClass || !dob) {
-      setError('All required fields must be filled');
-      return;
-    }
-
-    const studentData = {
-      name,
-      email,
-      password,
-      role: 'student',
-      contactInfo: {
-        phone,
-        address
-      },
-      status: 'active'
-    };
+    setSuccess('');
+    setError('');
 
     try {
-      // Replace with actual API call
-      console.log('Submitting student:', studentData);
-      setError('');
-      alert('Student added successfully!');
-    } catch (err) {
-      setError('Failed to add student');
+      const payload = {
+        ...form,
+        documents: form.documents.split(',').map(doc => doc.trim()),
+      };
+      await axios.post('http://localhost:5000/students', payload);
+      setSuccess('✅ Student added successfully!');
+      setForm({
+        userId: '',
+        studentID: '',
+        classId: '',
+        section: '',
+        admissionDate: '',
+        parentId: '',
+        documents: '',
+      });
+      if (onSuccess) onSuccess();
+    } catch {
+      setError('❌ Failed to add student. Please check the data.');
     }
   };
 
   return (
-    
-      <div className="max-w-xl mx-auto bg-white p-6 rounded shadow mt-8">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">Add New Student</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <FormInput
-            label="Full Name"
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter student name"
-            required
-            error={!name && error ? error : ''}
-          />
+    <div className="max-w-xl mx-auto p-6 bg-white rounded shadow">
+      <h2 className="text-xl font-semibold text-gray-700 mb-4">➕ Add New Student</h2>
 
-          <FormInput
-            label="Email"
-            name="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter student email"
-            required
-            error={!email && error ? error : ''}
-          />
+      {success && <p className="text-green-600 mb-2">{success}</p>}
+      {error && <p className="text-red-600 mb-2">{error}</p>}
 
-          <FormInput
-            label="Password"
-            name="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Set a password"
-            required
-            error={!password && error ? error : ''}
-          />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Select Student by Name */}
+        <select
+          name="userId"
+          value={form.userId}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        >
+          <option value="">Select Student Name</option>
+          {users.map(user => (
+            <option key={user._id} value={user._id}>
+              {user.name} ({user.email})
+            </option>
+          ))}
+        </select>
 
-          <FormSelect
-            label="Class"
-            name="class"
-            value={selectedClass}
-            onChange={(e) => setSelectedClass(e.target.value)}
-            options={classOptions}
-            required
-            error={!selectedClass && error ? error : ''}
-          />
+        <input
+          type="text"
+          name="studentID"
+          value={form.studentID}
+          onChange={handleChange}
+          placeholder="Student ID (e.g. STD2025-111)"
+          className="w-full p-2 border rounded"
+          required
+        />
 
-          <FormDatePicker
-            label="Date of Birth"
-            selectedDate={dob}
-            onChange={setDob}
-            required
-            placeholder="dd/mm/yyyy"
-          />
+        {/* Select Class by Grade + Section */}
+        <select
+          name="classId"
+          value={form.classId}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        >
+          <option value="">Select Class</option>
+          {classes.map(cls => (
+            <option key={cls._id} value={cls._id}>
+              {cls.gradeLevel} - Section {cls.section}
+            </option>
+          ))}
+        </select>
 
-          <FormInput
-            label="Phone"
-            name="phone"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Enter contact number"
-          />
+        {/* Select Section (redundant if class includes it) */}
+        <select
+          name="section"
+          value={form.section}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        >
+          <option value="">Select Section</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        </select>
 
-          <FormInput
-            label="Address"
-            name="address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Enter address"
-          />
+        <input
+          type="date"
+          name="admissionDate"
+          value={form.admissionDate}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+        />
 
-          {error && <div className="text-sm text-red-500">{error}</div>}
+        {/* Select Parent by Name */}
+        <select
+          name="parentId"
+          value={form.parentId}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+        >
+          <option value="">Select Parent</option>
+          {parents.map(parent => (
+            <option key={parent._id} value={parent._id}>
+              {parent.name} ({parent.email})
+            </option>
+          ))}
+        </select>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-          >
-            Add Student
-          </button>
-        </form>
-      </div>
+        <input
+          type="text"
+          name="documents"
+          value={form.documents}
+          onChange={handleChange}
+          placeholder="Documents (comma-separated)"
+          className="w-full p-2 border rounded"
+        />
+
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
   );
 };
 
 export default AddStudent;
+
+
+// Future work , make sure the submit document

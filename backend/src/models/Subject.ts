@@ -12,7 +12,7 @@ const subjectSchema = new Schema<ISubject>({
     {
       type: Schema.Types.ObjectId,
       ref: 'Teacher',
-      required: true
+    
     }
   ]
 });

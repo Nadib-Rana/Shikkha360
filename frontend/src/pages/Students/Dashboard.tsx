@@ -1,6 +1,6 @@
 
 import Layout from '../../components/layout/Layout';
-import StatsCards from '../../pages/Dashboard/StatsCards';
+import StatsCards from '../Dashboard/AdminDashboard';
 import { Link } from 'react-router-dom';
 import {
   FaHome,

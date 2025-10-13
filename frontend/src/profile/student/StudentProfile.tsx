@@ -1,6 +1,6 @@
 
 import Layout from '../../components/layout/Layout';
-import StatsCards from '../../pages/Dashboard/StatsCards';
+import StatsCards from '../../pages/Dashboard/AdminDashboard';
 
 const studnetSidebar = [
   { path: '/students/Profile', label: 'Profile' },

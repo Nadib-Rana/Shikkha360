@@ -1,22 +1,39 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-function Header() {
-    return (
-        <div className='fixed w-full flex justify-between border-b-1'>
-            <h2 className='text-3xl font-bold text-gray-700 text-center'>Admin Name</h2>
-            <div className='flex justify-between'>
-                <ul className='m-1 text-left'>
-                    <li className='text-xl font-bold text-gray-500'>UserName</li>
-                    <li className='text-sm font-mono'>UserID:213002247</li>
-                </ul>
-                <img
-                    src="https://avatars.githubusercontent.com/u/169526577?v=4"
-                    alt="ProfileImg"
-                    className='max-w-[50px] max-h-[50px] border-2 border-gray-700 rounded-[50%] p-0.5 m-1'
-                />
-            </div>
-        </div >
-    )
+interface User {
+  _id: string;
+  name: string;
+  role: string;
+  avatar?: string;
 }
 
-export default Header
+const Header: React.FC = () => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    axios.get<User>('http://localhost:5000/auth/me') // adjust endpoint as needed
+      .then(res => setUser(res.data))
+      .catch(() => setUser(null));
+  }, []);
+
+  return (
+    <div className="fixed w-full flex justify-between items-center bg-white border-b px-6 py-3 shadow z-50">
+      <h2 className="text-2xl font-bold text-gray-700">Welcome, {user?.role }</h2>
+
+      <div className="flex items-center space-x-4">
+        <ul className="text-right">
+          <li className="text-lg font-semibold text-gray-600">{user?.name || 'UserName'}</li>
+          <li className="text-sm font-mono text-gray-500">UserID: {user?._id || '...'}</li>
+        </ul>
+        <img
+          src={user?.avatar || 'https://avatars.githubusercontent.com/u/169526577?v=4'}
+          alt="ProfileImg"
+          className="w-10 h-10 border-2 border-gray-700 rounded-full object-cover"
+        />
+      </div>
+    </div>
+  );
+};
+
+export default Header;
