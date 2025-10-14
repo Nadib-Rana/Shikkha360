@@ -2,30 +2,15 @@ import { useLocation } from 'react-router-dom';
 import NavigationCard from '../../components/common/NavigationCard';
 
 const teacherActions = [
-  {
-    title: 'Add New Teacher',
-    description: 'Create a new teacher profile',
-    to: 'add-teacher',
-    icon: '➕',
-  },
-  {
-    title: 'Edit Teacher',
-    description: 'Update teacher information',
-    to: 'edit-teacher',
-    icon: '✏️',
-  },
+ 
+ 
   {
     title: 'Teacher List',
     description: 'View all registered teachers',
     to: 'teacher-list',
     icon: '📋',
-  },
-  {
-    title: 'Teacher Profile',
-    description: 'View detailed teacher info',
-    to: 'teacher-profile',
-    icon: '👤',
-  },
+  }
+ 
 ];
 
 function Teachers() {

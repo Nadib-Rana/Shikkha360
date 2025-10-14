@@ -44,7 +44,7 @@ const AssignSubjects = () => {
   };
 
   return (
-    <Layout>
+
       <div className="max-w-xl mx-auto bg-white p-6 rounded shadow mt-8">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">Assign Subjects to Class</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -89,7 +89,7 @@ const AssignSubjects = () => {
           </button>
         </form>
       </div>
-    </Layout>
+    
   );
 };
 

@@ -4,7 +4,7 @@ import { IExam } from '../interfaces/Exam';
 
 const ExamSchema = new Schema<IExam>({
   title: { type: String, required: true },
-  type: { type: String, enum: ['midterm', 'final', 'quiz'], required: true },
+  type: { type: String, enum: ['midterm','weeky','mountly', 'final', 'quiz'], required: true },
   date: { type: Date, required: true },
   classId: { type: Schema.Types.ObjectId, ref: 'Class', required: true },
   subjectId: { type: Schema.Types.ObjectId, ref: 'Subject', required: true },

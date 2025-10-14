@@ -7,7 +7,7 @@ const ClassSchema = new Schema<IClass>({
      type: String, 
      required: true 
     },
-  section:{ type: String,  required: true} ,
+  section:{ type: String} ,
   
   classTeacherId: { 
     type: Schema.Types.ObjectId, 

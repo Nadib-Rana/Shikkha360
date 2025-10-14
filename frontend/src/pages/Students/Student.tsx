@@ -3,30 +3,13 @@ import Layout from '../../components/layout/Layout';
 import NavigationCard from '../../components/common/NavigationCard';
 
 const studentActions = [
-  {
-    title: 'Add Student',
-    description: 'Create a new student profile',
-    to: 'add-student',
-    icon: '➕',
-  },
-  {
-    title: 'Edit Student',
-    description: 'Update student information',
-    to: 'edit-student',
-    icon: '✏️',
-  },
-  {
+ {
     title: 'Student List',
     description: 'View all registered students',
     to: 'student-list',
     icon: '📋',
   },
-  {
-    title: 'Student Profile',
-    description: 'View detailed student info',
-    to: 'student-profile',
-    icon: '👤',
-  },
+
 ];
 
 function Student() {

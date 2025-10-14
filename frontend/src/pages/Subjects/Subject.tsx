@@ -2,30 +2,14 @@ import { useLocation } from 'react-router-dom';
 import NavigationCard from '../../components/common/NavigationCard';
 
 const subjectActions = [
-  {
-    title: 'Add New Subject',
-    description: 'Create a new subject profile',
-    to: 'add-subject',
-    icon: '➕',
-  },
-  {
-    title: 'Edit Subject',
-    description: 'Update subject information',
-    to: 'edit-subject',
-    icon: '✏️',
-  },
+
   {
     title: 'Subject List',
     description: 'View all registered subjects',
     to: 'subject-list',
     icon: '📋',
   },
-  {
-    title: 'Subject Profile',
-    description: 'View detailed subject info',
-    to: 'subject-profile',
-    icon: '👤',
-  },
+  
 ];
 
 function Subject() {
