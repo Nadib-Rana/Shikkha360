@@ -12,6 +12,8 @@ import ManageUser from '../pages/Dashboard/ManageUser';
 import TeachersList from '../pages/Teachers/TeacherList';
 import StudentList from '../pages/Students/StudentList';
 import SubjectList from '../pages/Subjects/SubjectList';
+// import AdminExamPage from '../components/Exams/AdminExamPage';
+import AdminExamPage from '../pages/Exams/AdminExamPage';
 
 
 const menuItems = [
@@ -79,6 +81,15 @@ const AdminRoutes = [
     </div>
   </ProtectedRoute>}/>,
 
+<Route key="admin-students" path="/admin/students/exam" 
+  element={
+  <ProtectedRoute>
+    <div>
+      <Layout links={menuItems}>
+          <AdminExamPage />
+      </Layout>
+    </div>
+  </ProtectedRoute>}/>,
 
   <Route 
    key="admin-subjects"

@@ -1,3 +1,5 @@
+// models/Subject
+
 import mongoose , {Schema} from "mongoose";
 import { ISubject } from "../interfaces/Subject";
 const subjectSchema = new Schema<ISubject>({
@@ -11,8 +13,7 @@ const subjectSchema = new Schema<ISubject>({
   assignedTeacherIds: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Teacher',
-    
+      ref: 'User',
     }
   ]
 });

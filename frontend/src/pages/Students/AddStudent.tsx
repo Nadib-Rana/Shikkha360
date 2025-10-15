@@ -186,5 +186,3 @@ const AddStudent: React.FC<Props> = ({ onSuccess }) => {
 
 export default AddStudent;
 
-
-// Future work , make sure the submit document

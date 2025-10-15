@@ -17,7 +17,9 @@ export const getAllSubjects = async (req: Request, res: Response) => {
  console.log("Get All Subjects");
   
     try {
-    const subjects = await Subject.find().populate("assignedTeacherIds", "name email");
+    const subjects = await Subject.find()
+    .populate("assignedTeacherIds", "name email");
+    
     res.status(200).json(subjects);
     console.log("All Subjects:", subjects);
   } catch (error) {

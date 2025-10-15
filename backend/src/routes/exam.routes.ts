@@ -1,24 +1,12 @@
-// routes/examRoutes.ts
-import { Router } from 'express';
-import {
-  createExam,
-  updateExam,
-  getExams,
-  getExamById
-} from '../controllers/exam.controller';
+import express from 'express';
+import { createExam, updateExam, getExams, getExamById, deleteExam } from '../controllers/exam.controller';
 
-const router = Router();
+const router = express.Router();
 
-// Create a new exam
 router.post('/', createExam);
-
-// Update an existing exam by ID
-router.put('/:id', updateExam);
-
-// Get all exams
 router.get('/', getExams);
-
-// Get a specific exam by ID
 router.get('/:id', getExamById);
+router.put('/:id', updateExam);
+router.delete('/:id', deleteExam);
 
 export default router;

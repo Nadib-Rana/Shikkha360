@@ -1,11 +1,13 @@
-export interface IExam {
+export default interface Exam {
   _id: string;
   title: string;
-  type: 'midterm' | 'final' | 'quiz';
+  type: string;
   date: string;
   classId: string;
   subjectId: string;
   createdBy: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
+
+
 }

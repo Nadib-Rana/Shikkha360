@@ -10,7 +10,8 @@ export const getTeachers = async (_req: Request, res: Response) => {
 
 // GET teacher by ID
 export const getTeacherById = async (req: Request, res: Response) => {
-  const teacher = await Teacher.findById(req.params.id).populate('userId classIds');
+  const teacher = await Teacher.findById(req.params.id)
+  .populate('userId classIds');
   if (!teacher) return res.status(404).json({ message: 'Teacher not found' });
   res.json(teacher);
 };

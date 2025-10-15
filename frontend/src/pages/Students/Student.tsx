@@ -9,6 +9,12 @@ const studentActions = [
     to: 'student-list',
     icon: '📋',
   },
+  {
+    title: 'Student Exam',
+    description: 'View all Exam',
+    to: 'exam',
+    icon: '📋',
+  },
 
 ];
 

@@ -1,16 +1,17 @@
 
 import React from 'react';
-import { FaUserGraduate, FaChartLine, FaClipboard, FaComments, FaMoneyBill, FaUserCog, FaHome } from 'react-icons/fa';
+import { FaUserGraduate, FaChartLine, FaClipboard, FaComments, FaMoneyBill, FaUserCog, FaHome, FaCalendar } from 'react-icons/fa';
 import Layout from '../components/layout/Layout';
 
 const menuItems = [
   { path: '/parent/dashboard', label: "Dashboard", icon: <FaHome /> },
   { path: '/parent/children', label: "My Children", icon: <FaUserGraduate /> },
-  { path: '/parent/progress', label: "Progress & Grades", icon: <FaChartLine /> },
-  { path: '/parent/attendance', label: "Attendance", icon: <FaClipboard /> },
-  { path: '/parent/assignments', label: "Assignments", icon: <FaClipboard /> },
+  { path: '/parent/children/exam', label: "Exam", icon: <FaCalendar /> },
+  { path: '/parent/children/result', label: "Result", icon: <FaUserGraduate /> },
+  { path: '/parent/children/attendance', label: "Attendance", icon: <FaClipboard /> },
+  { path: '/parent/children/assignments', label: "Assignments", icon: <FaClipboard /> },
   { path: '/parent/messages', label: "Messages", icon: <FaComments /> },
-  { path: '/parent/fees', label: "Fees & Payments", icon: <FaMoneyBill /> },
+  { path: '/parent/children/fees', label: "Fees & Payments", icon: <FaMoneyBill /> },
   { path: '/parent/profile', label: "Profile/Settings", icon: <FaUserCog /> },
 ];
 
