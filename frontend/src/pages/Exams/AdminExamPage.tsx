@@ -1,15 +1,17 @@
 import React from "react";
 import ExamList from "../../components/Exams/ExamList";
-import Searching from "../../components/common/Scarching";
+interface User {
+  _id: string;
+  name: string;
+  email?: string;
+  role: "admin" ;
+}
 
-const AdminExamPage: React.FC = () => {
-  return (
-    <div className="p-6">
-      
-      <h1 className="text-3xl font-bold mb-4">Admin - Manage Exams</h1>
-      <ExamList canCreate={true} canEdit={true} canDelete={true} />
-    </div>
-  );
-};
+interface TeacherExamPageProps {
+  user: User;
+}
+ const AdminExamPage: React.FC<TeacherExamPageProps> = ({ user }) => {
+   return <ExamList canCreate={true} canEdit={true} canDelete={true} user={user} />
+}
 
 export default AdminExamPage;

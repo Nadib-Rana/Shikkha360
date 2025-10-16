@@ -1,13 +1,18 @@
 import React from "react";
 import ExamList from "../../components/Exams/ExamList";
+interface User {
+  _id: string;
+  name: string;
+  email?: string;
+  role: "student";
+  // Add other properties as needed
+}
 
-const StudentExamPage: React.FC = () => {
-  return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-4">Student - Exams</h1>
-      <ExamList canCreate={false} canEdit={false} canDelete={false} />
-    </div>
-  );
+interface TeacherExamPageProps {
+  user: User;
+}
+const StudentExamPage:React.FC<TeacherExamPageProps> = ({ user }) => {
+  return <ExamList user={user} />;
 };
 
 export default StudentExamPage;

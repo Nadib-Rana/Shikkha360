@@ -3,11 +3,13 @@ import axios from "axios";
 import ExamCard from "./ExamCard";
 import ExamDetails from "./ExamDetails";
 import ExamForm from "./ExamForm";
+import ExamFilter from "./ExamFilter"; // 
 
 interface ExamListProps {
   canCreate?: boolean;
   canEdit?: boolean;
   canDelete?: boolean;
+  
 }
 
 const ExamList: React.FC<ExamListProps> = ({
@@ -29,7 +31,7 @@ const ExamList: React.FC<ExamListProps> = ({
   const fetchExams = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/exams`);
+      const res = await axios.get<any[]>(`${import.meta.env.VITE_API_URL}/exams`);
       setExams(res.data);
     } catch (err) {
       console.error(err);
@@ -41,6 +43,19 @@ const ExamList: React.FC<ExamListProps> = ({
   useEffect(() => {
     fetchExams();
   }, []);
+
+  // Filter handler
+  const handleFilterChange = (key: string, value: string) => {
+    if (key === "filterClass") setFilterClass(value);
+    if (key === "filterSubject") setFilterSubject(value);
+    if (key === "filterType") setFilterType(value);
+  };
+
+  const handleResetFilters = () => {
+    setFilterClass("");
+    setFilterSubject("");
+    setFilterType("");
+  };
 
   // Apply filters
   const filteredExams = exams.filter((exam) => {
@@ -71,43 +86,14 @@ const ExamList: React.FC<ExamListProps> = ({
         )}
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-3 mb-4 flex-wrap">
-        <input
-          placeholder="Filter by Class"
-          value={filterClass}
-          onChange={(e) => setFilterClass(e.target.value)}
-          className="border p-2 rounded"
-        />
-        <input
-          placeholder="Filter by Subject"
-          value={filterSubject}
-          onChange={(e) => setFilterSubject(e.target.value)}
-          className="border p-2 rounded"
-        />
-        <select
-          value={filterType}
-          onChange={(e) => setFilterType(e.target.value)}
-          className="border p-2 rounded"
-        >
-          <option value="">All Types</option>
-          <option value="midterm">Midterm</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-          <option value="final">Final</option>
-          <option value="quiz">Quiz</option>
-        </select>
-        <button
-          onClick={() => {
-            setFilterClass("");
-            setFilterSubject("");
-            setFilterType("");
-          }}
-          className="bg-gray-300 px-3 py-1 rounded"
-        >
-          Reset
-        </button>
-      </div>
+      {/* Filters (separated component) */}
+      <ExamFilter
+        filterClass={filterClass}
+        filterSubject={filterSubject}
+        filterType={filterType}
+        onFilterChange={handleFilterChange}
+        onReset={handleResetFilters}
+      />
 
       {/* Exam Cards */}
       {loading ? (
