@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Layout from '../../components/layout/Layout';
+
 
 const Register: React.FC = () => {
   const [name, setName] = useState('');
@@ -27,7 +27,7 @@ const Register: React.FC = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/auth/register', {
+      const response = await axios.post('${process.env.VITE_API_URL}/auth/register', {
         name,
         email,
         role,

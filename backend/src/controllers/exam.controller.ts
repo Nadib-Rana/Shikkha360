@@ -1,85 +1,142 @@
-import { Request, Response } from 'express';
-import Exam from '../models/Exam';
+import { Request, Response } from "express";
+import Exam from "../models/Exam";
+import Student from "../models/Student";
+import Teacher from "../models/Teacher";
 
-// Create a new exam
-export const createExam = async (req: Request, res: Response) => {
-  try {
-    const exam = await Exam.create(req.body);
-    res.status(201).json(exam);
-  } catch (error: any) {
-    console.error('Create Exam Error:', error.message);
-    res.status(500).json({ message: 'Failed to create exam', error: error.message });
-  }
-};
-
-// Update an existing exam
-export const updateExam = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const updatedExam = await Exam.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!updatedExam) {
-      return res.status(404).json({ message: 'Exam not found' });
-    }
-
-    res.status(200).json(updatedExam);
-  } catch (error: any) {
-    console.error('Update Exam Error:', error.message);
-    res.status(500).json({ message: 'Failed to update exam', error: error.message });
-  }
-};
-
-// Get all exams
+// ----------------- GET Exams -----------------
 export const getExams = async (req: Request, res: Response) => {
   try {
-    const exams = await Exam.find()
-      .populate('classId', 'gradeLevel section')
-      .populate('subjectId', 'name code')
-      .populate('createdBy', 'name email');
+    console.log("hit for get Exam");
+    const user = (req as any).user;
+    let filter: any = {};
+
+    if (!user) return res.status(401).json({ message: "Unauthorized" });
+
+    if (user.role === "admin") filter = {};
+    else if (user.role === "student") {
+      const student = await Student.findOne({ userId: user.id });
+      if (!student) return res.status(404).json({ message: "Student profile not found" });
+      filter = { classId: student.classId };
+    } else if (user.role === "teacher") {
+      const teacher = await Teacher.findOne({ userId: user.id });
+      if (!teacher) return res.status(404).json({ message: "Teacher profile not found" });
+      filter = { classId: { $in: teacher.classIds } };
+    } else if (user.role === "parent") {
+      const student = await Student.findOne({ parentId: user.id });
+      if (!student) return res.status(404).json({ message: "No linked student found" });
+      filter = { classId: student.classId };
+    }
+
+    const exams = await Exam.find(filter)
+      .populate("classId", "gradeLevel section")
+      .populate("subjectId", "name code")
+      .populate("createdBy", "name role");
 
     res.status(200).json(exams);
-  } catch (error: any) {
-    console.error('Get Exams Error:', error.message);
-    res.status(500).json({ message: 'Failed to fetch exams', error: error.message });
+  } catch (err: any) {
+    console.error("Get exams error:", err);
+    res.status(500).json({ error: err.message });
   }
 };
 
-// Get exam by ID
+// ----------------- GET Exam BY ID -----------------
 export const getExamById = async (req: Request, res: Response) => {
   try {
+    console.log("hit for get Exam by Id");
+    console.log("User->")
+    const user = (req as any).user;
     const { id } = req.params;
-    const exam = await Exam.findById(id)
-      .populate('classId', 'gradeLevel section')
-      .populate('subjectId', 'name code')
-      .populate('createdBy', 'name email');
+    console.log(user ,"for get data");
 
-    if (!exam) {
-      return res.status(404).json({ message: 'Exam not found' });
+    const exam = await Exam.findById(id)
+      .populate("classId", "gradeLevel section")
+      .populate("subjectId", "name code")
+      .populate("createdBy", "name role");
+
+    if (!exam) return res.status(404).json({ message: "Exam not found" });
+
+    // Role-based access check
+    if (user.role === "admin") {
+      return res.status(200).json(exam);
+    } else if (user.role === "student") {
+      const student = await Student.findOne({ userId: user.id });
+      if (!student || student.classId.toString() !== exam.classId._id.toString()) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+    } else if (user.role === "teacher") {
+      const teacher = await Teacher.findOne({ userId: user.id });
+      if (!teacher || !teacher.classIds.some(cid => cid.toString() === exam.classId._id.toString())) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+    } else if (user.role === "parent") {
+      const student = await Student.findOne({ parentId: user.id });
+      if (!student || student.classId.toString() !== exam.classId._id.toString()) {
+        return res.status(403).json({ message: "Access denied" });
+      }
     }
 
     res.status(200).json(exam);
-  } catch (error: any) {
-    console.error('Get Exam By ID Error:', error.message);
-    res.status(500).json({ message: 'Failed to fetch exam', error: error.message });
+  } catch (err: any) {
+    console.error("Get exam by ID error:", err);
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Delete an exam
+// ----------------- CREATE Exam -----------------
+export const createExam = async (req: Request, res: Response) => {
+  try {
+    console.log("hit for Create Exam");
+    const user = (req as any).user;
+    if (!user || !["admin", "teacher"].includes(user.role)) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    const exam = await Exam.create({ ...req.body, createdBy: user.id });
+    res.status(201).json(exam);
+  } catch (err: any) {
+    console.error("Create Exam Error:", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ----------------- UPDATE Exam -----------------
+export const updateExam = async (req: Request, res: Response) => {
+  try {
+    console.log("hit for Update Exam");
+    const user = (req as any).user;
+    if (!user || user.role !== "admin") {
+      return res.status(403).json({ message: "Only admin can update exam" });
+    }
+
+    const { id } = req.params;
+    const updatedExam = await Exam.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+
+    if (!updatedExam) return res.status(404).json({ message: "Exam not found" });
+
+    res.status(200).json(updatedExam);
+  } catch (err: any) {
+    console.error("Update Exam Error:", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ----------------- DELETE Exam -----------------
 export const deleteExam = async (req: Request, res: Response) => {
   try {
+    console.log("hit for delete");
+    const user = (req as any).user;
+    if (!user || user.role !== "admin") {
+      return res.status(403).json({ message: "Only admin can delete exam" });
+    }
+
     const { id } = req.params;
     const deletedExam = await Exam.findByIdAndDelete(id);
 
-    if (!deletedExam) {
-      return res.status(404).json({ message: 'Exam not found' });
-    }
+    if (!deletedExam) return res.status(404).json({ message: "Exam not found" });
 
-    res.status(200).json({ message: 'Exam deleted successfully', exam: deletedExam });
-  } catch (error: any) {
-    console.error('Delete Exam Error:', error.message);
-    res.status(500).json({ message: 'Failed to delete exam', error: error.message });
+    res.status(200).json({ message: "Exam deleted successfully", exam: deletedExam });
+  } catch (err: any) {
+    console.error("Delete Exam Error:", err.message);
+    res.status(500).json({ message: err.message });
   }
 };

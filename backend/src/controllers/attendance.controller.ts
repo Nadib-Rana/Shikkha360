@@ -20,7 +20,7 @@ export const updateAttendance = async (req: Request, res: Response) => {
     const updatedAttendance = await Attendance.findByIdAndUpdate(
       id,
       updateData,
-      { new: true } // returns the updated document
+      { new: true } 
     );
 
     if (!updatedAttendance) {

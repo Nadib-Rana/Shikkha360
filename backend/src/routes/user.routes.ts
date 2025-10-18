@@ -6,12 +6,15 @@ import {
   updateUser,
   deleteUser,
 } from '../controllers/user.controller';
+import { authMiddleware } from '../middleware/authMiddleware';
+
 
 
 // /users
 const router = express.Router();
 
-router.get('/', getAllUsers);
+
+router.get('/',authMiddleware, getAllUsers);
 router.get('/:id', getUserById);
 router.post('/', createUser);
 router.put('/:id', updateUser);

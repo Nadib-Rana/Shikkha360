@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User";
 
-const JWT_SECRET = process.env.JWT_SECRET_KEY as string;
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
 // REGISTER
 export const registerUser = async (req: Request, res: Response) => {
@@ -34,6 +34,10 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 };
 
+
+// -----------------------------------------------------------------------------
+
+
 // LOGIN
 export const loginUser = async (req: Request, res: Response) => {
   try {
@@ -57,6 +61,8 @@ export const loginUser = async (req: Request, res: Response) => {
     
     res.json({ token, user: { name: user.name, email: user.email, role: user.role } });
     console.log(user);
+    console.log(token);
+
   } catch (err) {
     res.status(500).json({ error: (err as Error).message });
   }

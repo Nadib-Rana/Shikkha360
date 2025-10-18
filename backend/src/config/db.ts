@@ -8,10 +8,10 @@ const mongodbUrl = process.env.MONGO_URI as string;
 const connectDatabase = async (options: ConnectOptions = {}): Promise<void> => {
   try {
     await mongoose.connect(mongodbUrl, options);
-    console.log('✅ Connection to database is successfully established');
+    console.log('✅ Connected ');
 
     mongoose.connection.on('error', (error: Error) => {
-      console.error('❌ Database connection error:', error);
+      console.error('❌ Connection error:', error);
     });
   } catch (error: any) {
     console.error('❌ Could not connect to database:', error.toString());

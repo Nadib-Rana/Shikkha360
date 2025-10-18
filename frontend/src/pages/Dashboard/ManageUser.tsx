@@ -18,10 +18,24 @@ const ManageUser: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const fetchUsers = () => {
-    axios.get<User[]>('http://localhost:5000/users')
-      .then(res => setUsers(res.data));
+  const token = localStorage.getItem('authToken');
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await axios.get<User[]>('http://localhost:5000/users', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUsers(res.data);
+    } catch (err) {
+      setError('Failed to fetch users');
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -34,15 +48,22 @@ const ManageUser: React.FC = () => {
   );
 
   const handleSuspend = async (user: User) => {
+    const confirm = window.confirm(`Are you sure you want to ${user.status === 'active' ? 'suspend' : 'activate'} this user?`);
+    if (!confirm) return;
+
     const updatedStatus = user.status === 'active' ? 'inactive' : 'active';
-    await axios.put(`http://localhost:5000/users/${user._id}`, { status: updatedStatus });
+    await axios.put(`${import.meta.env.VITE_API_URL}/users/${user._id}`, { status: updatedStatus }, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     fetchUsers();
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedUser) {
-      await axios.put(`http://localhost:5000/users/${selectedUser._id}`, selectedUser);
+      await axios.put(`${import.meta.env.VITE_API_URL}users/${selectedUser._id}`, selectedUser, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setEditMode(false);
       setSelectedUser(null);
       fetchUsers();
@@ -85,9 +106,13 @@ const ManageUser: React.FC = () => {
         </button>
       </div>
 
+      {/* Loading/Error */}
+      {loading && <p>Loading users...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+
       {/* Register Modal */}
       {showRegister && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div role="dialog" aria-modal="true" className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-xl shadow-lg">
             <h3 className="text-lg font-semibold mb-4">Register New User</h3>
             <Register />
@@ -124,7 +149,12 @@ const ManageUser: React.FC = () => {
                   {u.status}
                 </span>
               </td>
-              <td className="p-3">{new Date(u.createdAt).toLocaleDateString()}</td>
+              <td className="p-3">
+                {new Date(u.createdAt).toLocaleString('en-US', {
+                  dateStyle: 'medium',
+                  timeStyle: 'short',
+                })}
+              </td>
               <td className="p-3 space-x-2">
                 <button onClick={() => { setSelectedUser(u); setEditMode(false); }} className="text-blue-600 hover:underline">View</button>
                 <button onClick={() => { setSelectedUser(u); setEditMode(true); }} className="text-purple-600 hover:underline">Edit</button>
@@ -139,7 +169,7 @@ const ManageUser: React.FC = () => {
 
       {/* User Modal */}
       {selectedUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div role="dialog" aria-modal="true" className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-lg">
             <h3 className="text-lg font-semibold mb-4">
               {editMode ? 'Edit User' : 'User Details'}
@@ -180,10 +210,13 @@ const ManageUser: React.FC = () => {
                 <p><strong>Role:</strong> {selectedUser.role}</p>
                 <p><strong>Status:</strong> {selectedUser.status}</p>
                 <p><strong>Created:</strong> {new Date(selectedUser.createdAt).toLocaleString()}</p>
-              </div>
+                           </div>
             )}
 
-            <button onClick={() => setSelectedUser(null)} className="mt-4 text-gray-600 hover:underline">
+            <button
+              onClick={() => setSelectedUser(null)}
+              className="mt-4 text-gray-600 hover:underline"
+            >
               Close
             </button>
           </div>
@@ -194,3 +227,4 @@ const ManageUser: React.FC = () => {
 };
 
 export default ManageUser;
+              
