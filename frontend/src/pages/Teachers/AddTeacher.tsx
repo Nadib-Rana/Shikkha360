@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Select from 'react-select';
 
 interface User {
   _id: string;
@@ -12,6 +13,11 @@ interface Subject {
   _id: string;
   name: string;
   code: string;
+}
+
+interface Teacher {
+  userId: string;
+  email: string;
 }
 
 interface Props {
@@ -29,27 +35,55 @@ const AddTeacher: React.FC<Props> = ({ onSuccess }) => {
 
   const [users, setUsers] = useState<User[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [existingTeachers, setExistingTeachers] = useState<Teacher[]>([]);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get<User[]>('http://localhost:5000/users')
-      .then(res => {
-        const teachers = res.data.filter(u => u.role === 'teacher');
-        setUsers(teachers);
-      });
+    const token = localStorage.getItem('authToken');
 
-    axios.get<Subject[]>('http://localhost:5000/subjects')
-      .then(res => setSubjects(res.data));
+    const fetchData = async () => {
+      try {
+        const [userRes, teacherRes, subjectRes] = await Promise.all([
+          axios.get<User[]>('http://localhost:5000/users', {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get<{ userId: string }[]>('http://localhost:5000/teachers', {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get<Subject[]>('http://localhost:5000/subjects', {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        const assignedUserIds = teacherRes.data.map(t => t.userId);
+        const availableTeachers = userRes.data.filter(
+          u => u.role === 'teacher' && !assignedUserIds.includes(u._id)
+        );
+
+        const teacherEmails: Teacher[] = teacherRes.data.map(t => {
+          const match = userRes.data.find(u => u._id === t.userId);
+          return match ? { userId: t.userId, email: match.email } : { userId: t.userId, email: '' };
+        });
+
+        setUsers(availableTeachers);
+        setSubjects(subjectRes.data);
+        setExistingTeachers(teacherEmails);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubjectsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = Array.from(e.target.selectedOptions, opt => opt.value);
-    setForm({ ...form, subjects: selected });
+  const handleSubjectsChange = (selected: any) => {
+    const subjectIds = selected.map((s: Subject) => s._id);
+    setForm({ ...form, subjects: subjectIds });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,8 +91,27 @@ const AddTeacher: React.FC<Props> = ({ onSuccess }) => {
     setSuccess('');
     setError('');
 
+    const token = localStorage.getItem('authToken');
+    const selectedUser = users.find(u => u._id === form.userId);
+    if (!selectedUser) {
+      setError('Please select a valid teacher.');
+      return;
+    }
+
+    const isDuplicate = existingTeachers.some(
+      t => t.userId === selectedUser._id || t.email === selectedUser.email
+    );
+
+    if (isDuplicate) {
+      setError('❌ This teacher is already assigned (duplicate ID or email).');
+      return;
+    }
+
     try {
-      await axios.post('http://localhost:5000/teachers', form);
+      await axios.post('http://localhost:5000/teachers', form, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       setSuccess('✅ Teacher added successfully!');
       setForm({
         userId: '',
@@ -81,20 +134,17 @@ const AddTeacher: React.FC<Props> = ({ onSuccess }) => {
       {error && <p className="text-red-600 mb-2">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <select
+        <Select
           name="userId"
-          value={form.userId}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        >
-          <option value="">Select Teacher Name</option>
-          {users.map(user => (
-            <option key={user._id} value={user._id}>
-              {user.name} ({user.email})
-            </option>
-          ))}
-        </select>
+          value={users.find(u => u._id === form.userId) || null}
+          onChange={(selected) => setForm({ ...form, userId: selected?._id || '' })}
+          options={users}
+          getOptionLabel={(u) => `${u.name} (${u.email})`}
+          getOptionValue={(u) => u._id}
+          placeholder="Search and select teacher"
+          className="react-select-container"
+          classNamePrefix="react-select"
+        />
 
         <input
           type="text"
@@ -123,19 +173,17 @@ const AddTeacher: React.FC<Props> = ({ onSuccess }) => {
           className="w-full p-2 border rounded"
         />
 
-        {/* Dynamic Subject Selection */}
-        <select
-          multiple
-          value={form.subjects}
+        <Select
+          isMulti
+          value={subjects.filter(s => form.subjects.includes(s._id))}
           onChange={handleSubjectsChange}
-          className="w-full p-2 border rounded"
-        >
-          {subjects.map(subject => (
-            <option key={subject._id} value={subject._id}>
-              {subject.name} ({subject.code})
-            </option>
-          ))}
-        </select>
+          options={subjects}
+          getOptionLabel={(s) => `${s.name} (${s.code})`}
+          getOptionValue={(s) => s._id}
+          placeholder="Select subjects taught"
+          className="react-select-container"
+          classNamePrefix="react-select"
+        />
 
         <button
           type="submit"

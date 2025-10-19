@@ -8,7 +8,7 @@ import AssignSubjects from '../pages/Teachers/AssignSubjects';
 // import TeacherResults from '../pages/Teachers/TeacherResults';
 
 const TeacherRoutes = [
-  <Route key="teachers" path="/teachers" element={<ProtectedRoute><Teacher /></ProtectedRoute>} />,
+  <Route key="teachers" path="/teachers/dashboard" element={<ProtectedRoute><Teacher /></ProtectedRoute>} />,
   <Route key="teachers-list" path="/teachers/list" element={<ProtectedRoute><TeacherList /></ProtectedRoute>} />,
   <Route key="teachers-profile" path="/teachers/profile/:id" element={<ProtectedRoute><TeacherProfile /></ProtectedRoute>} />,
   <Route key="teachers-assignments" path="/teachers/assignments" element={<ProtectedRoute><TeacherAssignments /></ProtectedRoute>} />,

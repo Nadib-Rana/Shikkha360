@@ -8,7 +8,7 @@ import { FaBook, FaChartBar, FaClipboard, FaCog, FaHome, FaMoneyBill, FaUserGrad
 import Subject from '../pages/Subjects/Subject';
 import Teacher from '../pages/Teachers/Teachers';
 import { FaPersonRifle } from 'react-icons/fa6';
-import ManageUser from '../pages/Dashboard/ManageUser';
+import ManageUser from '../pages/Users/ManageUser';
 import TeachersList from '../pages/Teachers/TeacherList';
 import StudentList from '../pages/Students/StudentList';
 import SubjectList from '../pages/Subjects/SubjectList';
@@ -86,7 +86,7 @@ const AdminRoutes = [
   <ProtectedRoute>
     <div>
       <Layout links={menuItems}>
-          <AdminExamPage />
+          <AdminExamPage user={{} as any} />
       </Layout>
     </div>
   </ProtectedRoute>}/>,

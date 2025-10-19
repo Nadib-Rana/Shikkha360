@@ -2,7 +2,7 @@
 import React from 'react';
 import { FaUsers, FaUserTie, FaUserGraduate, FaBook, FaClipboard, FaChartBar, FaMoneyBill, FaCog, FaHome } from 'react-icons/fa';
 import Layout from '../components/layout/Layout';
-import Dashboard from './Dashboard/Dashboard';
+import Dashboard from './Dashboard/AdminDashboard';
 import Header from '../components/layout/Header';
 
 

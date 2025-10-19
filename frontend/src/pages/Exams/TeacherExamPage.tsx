@@ -15,7 +15,7 @@ interface TeacherExamPageProps {
 }
 
 const TeacherExamPage: React.FC<TeacherExamPageProps> = ({ user }) => {
-  return <ExamList user={user} />;
+  return <ExamList canCreate={true} canEdit={true} {...({ user } as any)} />;
 };
 
 export default TeacherExamPage;

@@ -11,7 +11,7 @@ const ParentRoutes = [
   />,
    <Route key="parent-dashboard" path="/parent/children/exam" element={
     <ProtectedRoute>
-      <ParentExamPage />
+      <ParentExamPage user={{} as any} />
     </ProtectedRoute>}
   />,
 ];

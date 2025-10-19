@@ -210,7 +210,7 @@ const ManageUser: React.FC = () => {
                 <p><strong>Role:</strong> {selectedUser.role}</p>
                 <p><strong>Status:</strong> {selectedUser.status}</p>
                 <p><strong>Created:</strong> {new Date(selectedUser.createdAt).toLocaleString()}</p>
-                           </div>
+               </div>
             )}
 
             <button

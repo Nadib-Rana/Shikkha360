@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Select from 'react-select';
 
 interface User {
   _id: string;
@@ -36,14 +37,26 @@ const AddStudent: React.FC<Props> = ({ onSuccess }) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get<User[]>('http://localhost:5000/users')
+    const token = localStorage.getItem('authToken');
+
+    axios.get<User[]>('http://localhost:5000/users', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then(res => {
         setUsers(res.data.filter(u => u.role === 'student'));
         setParents(res.data.filter(u => u.role === 'parent'));
+      })
+      .catch(err => {
+        console.error('Error fetching users:', err);
       });
 
-    axios.get<Class[]>('http://localhost:5000/classes')
-      .then(res => setClasses(res.data));
+    axios.get<Class[]>('http://localhost:5000/classes', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(res => setClasses(res.data))
+      .catch(err => {
+        console.error('Error fetching classes:', err);
+      });
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -56,11 +69,16 @@ const AddStudent: React.FC<Props> = ({ onSuccess }) => {
     setError('');
 
     try {
+      const token = localStorage.getItem('authToken');
       const payload = {
         ...form,
         documents: form.documents.split(',').map(doc => doc.trim()),
       };
-      await axios.post('http://localhost:5000/students', payload);
+
+      await axios.post('http://localhost:5000/students', payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       setSuccess('✅ Student added successfully!');
       setForm({
         userId: '',
@@ -85,21 +103,18 @@ const AddStudent: React.FC<Props> = ({ onSuccess }) => {
       {error && <p className="text-red-600 mb-2">{error}</p>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Select Student by Name */}
-        <select
+        {/* Searchable Student Dropdown */}
+        <Select
           name="userId"
-          value={form.userId}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        >
-          <option value="">Select Student Name</option>
-          {users.map(user => (
-            <option key={user._id} value={user._id}>
-              {user.name} ({user.email})
-            </option>
-          ))}
-        </select>
+          value={users.find(u => u._id === form.userId) || null}
+          onChange={(selected) => setForm({ ...form, userId: selected?._id || '' })}
+          options={users}
+          getOptionLabel={(u) => `${u.name} (${u.email})`}
+          getOptionValue={(u) => u._id}
+          placeholder="Search and select student"
+          className="react-select-container"
+          classNamePrefix="react-select"
+        />
 
         <input
           type="text"
@@ -111,7 +126,7 @@ const AddStudent: React.FC<Props> = ({ onSuccess }) => {
           required
         />
 
-        {/* Select Class by Grade + Section */}
+        {/* Class Dropdown */}
         <select
           name="classId"
           value={form.classId}
@@ -127,7 +142,7 @@ const AddStudent: React.FC<Props> = ({ onSuccess }) => {
           ))}
         </select>
 
-        {/* Select Section (redundant if class includes it) */}
+        {/* Section Dropdown */}
         <select
           name="section"
           value={form.section}
@@ -149,20 +164,18 @@ const AddStudent: React.FC<Props> = ({ onSuccess }) => {
           className="w-full p-2 border rounded"
         />
 
-        {/* Select Parent by Name */}
-        <select
+        {/* Searchable Parent Dropdown */}
+        <Select
           name="parentId"
-          value={form.parentId}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        >
-          <option value="">Select Parent</option>
-          {parents.map(parent => (
-            <option key={parent._id} value={parent._id}>
-              {parent.name} ({parent.email})
-            </option>
-          ))}
-        </select>
+          value={parents.find(p => p._id === form.parentId) || null}
+          onChange={(selected) => setForm({ ...form, parentId: selected?._id || '' })}
+          options={parents}
+          getOptionLabel={(p) => `${p.name} (${p.email})`}
+          getOptionValue={(p) => p._id}
+          placeholder="Search and select parent"
+          className="react-select-container"
+          classNamePrefix="react-select"
+        />
 
         <input
           type="text"
@@ -185,4 +198,3 @@ const AddStudent: React.FC<Props> = ({ onSuccess }) => {
 };
 
 export default AddStudent;
-

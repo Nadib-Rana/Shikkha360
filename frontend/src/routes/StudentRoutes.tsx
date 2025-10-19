@@ -9,7 +9,7 @@ import StudentResults from '../pages/Students/StudentResults';
 import StudentDashboard from '../pages/Students/Dashboard';
 
 const StudentRoutes = [
-  <Route key="students" path="/students" element={<ProtectedRoute><Student /></ProtectedRoute>} />,
+  <Route key="students" path="/students/dashboard" element={<ProtectedRoute><Student /></ProtectedRoute>} />,
   <Route key="students-add" path="/students/add" element={<ProtectedRoute><AddStudent /></ProtectedRoute>} />,
   <Route key="students-list" path="/students/list" element={<ProtectedRoute><StudentList /></ProtectedRoute>} />,
   <Route key="students-profile" path="/students/profile/:id" element={<ProtectedRoute><StudentProfile /></ProtectedRoute>} />,

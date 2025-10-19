@@ -7,11 +7,11 @@ interface User {
   role: "admin" ;
 }
 
-interface TeacherExamPageProps {
+interface AdminExamPageProps {
   user: User;
 }
- const AdminExamPage: React.FC<TeacherExamPageProps> = ({ user }) => {
-   return <ExamList canCreate={true} canEdit={true} canDelete={true} user={user} />
+ const AdminExamPage: React.FC<AdminExamPageProps> = ({ user }) => {
+   return <ExamList canCreate={true} canEdit={true} canDelete={true}  {...({ user } as any)}/>
 }
 
 export default AdminExamPage;
